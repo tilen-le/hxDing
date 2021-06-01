@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>hexing</artifactId>
+        <groupId>com.hexing</groupId>
+        <version>4.6.1</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>hexing-dzk</artifactId>
+
+    <description>
+        电子刊
+    </description>
+
+    <dependencies>
+        <!-- 核心模块-->
+        <dependency>
+            <groupId>com.hexing</groupId>
+            <artifactId>hexing-framework</artifactId>
+        </dependency>
+
+        <!-- 系统模块-->
+        <dependency>
+            <groupId>com.hexing</groupId>
+            <artifactId>hexing-system</artifactId>
+        </dependency>
+        <!-- 通用工具-->
+        <dependency>
+            <groupId>com.hexing</groupId>
+            <artifactId>hexing-common</artifactId>
+        </dependency>
+        <!--本地钉钉SDK-->
+        <dependency>
+            <groupId>taobao</groupId>
+            <artifactId>taobao-sdk</artifactId>
+            <version>2021.01.19</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/taobao-sdk-java-auto_1479188381469-20210119.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+            <version>1.18.2</version>
+        </dependency>
+
+    </dependencies>
+
+</project>

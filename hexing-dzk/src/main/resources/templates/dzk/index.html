@@ -1,0 +1,405 @@
+﻿<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('电子刊')"/>
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta name="wpk-bid" content="dta_1_1196893985">
+    <script type="text/javascript"  src="https://g.alicdn.com/dingding/dingtalk-jsapi/2.10.3/dingtalk.open.js"></script>
+    <script>    !(function (c, i, e, b) {
+        var h = i.createElement("script");
+        var f = i.getElementsByTagName("script")[0];
+        h.type = "text/javascript";
+        h.crossorigin = true;
+        h.onload = function () {
+            c[b] || (c[b] = new c.wpkReporter({bid: "dta_1_1196893985"}));
+            c[b].installAll()
+        };
+        f.parentNode.insertBefore(h, f);
+        h.src = e
+    })(window, document, "https://g.alicdn.com/woodpeckerx/jssdk??wpkReporter.js", "__wpk");</script>
+    <link th:href="@{/css/bootstrap.css}" rel="stylesheet"/>
+    <link th:href="@{/css/bootstrap-responsive.css}" rel="stylesheet"/>
+    <link th:href="@{/css/docs.css}" rel="stylesheet"/>
+    <link th:href="@{/css/lightbox.css}" rel="stylesheet"/>
+    <script th:src="@{/js/html5.js}"></script>
+    <!--[if lt IE 9]>
+    <script th:src="@{/js/html5.js}"></script>
+    <![endif]-->
+    <style>
+        .body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            /*overflow-x: hidden;*/
+        }
+
+        #masonry {
+            padding: 0;
+            min-height: 850px;
+            margin: 1% 1% 1% 0;
+
+        }
+
+        #masonry .thumbnail {
+            width: 15.6%;
+            margin: 1% 0 0 1%;
+            padding: 0;
+            border-width: 1px;
+            -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+        }
+
+        #masonry .thumbnail .imgs {
+            padding: 10px;
+        }
+
+        #masonry .thumbnail .imgs img {
+            margin-bottom: 5px;
+        }
+
+        #masonry .thumbnail .caption {
+            background-color: #fff;
+            padding-top: 0;
+            font-size: 13px;
+        }
+
+        #masonry .thumbnail .caption .title {
+            font-size: 13px;
+            font-weight: bold;
+            margin: 5px 5px;
+            text-align: left;
+            height: auto;
+
+        }
+
+        #masonry .thumbnail .caption .author {
+            font-size: 11px;
+            text-align: right;
+        }
+
+
+        .lightbox .lb-image {
+            max-width: none;
+        }
+
+        .img11 {
+            width: 30px;
+            height: auto;
+        }
+
+        #loading{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            text-align: center;
+            justify-content: center;
+            background:#dddddd;
+        }
+        .loadinner {
+            width: 40%;
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            line-height: 20px;
+        }
+
+        .graph {
+            background: #6c6c6c;
+            width: 40%;
+            height: 10px;
+        }
+
+        #bar {
+            display: block;
+            background: #f1f1f1;
+            height: 10px;
+            width: 50px;
+        }
+        .loading_title{
+            margin-top: 30px;
+            color:#b4b4b4;
+            font-size: 15px;
+        }
+        @media (max-width: 600px) {
+            #masonry .thumbnail {
+                width: 49%;
+                padding: 5px 5px;
+            }
+            .loadinner {
+                width: 100%;
+            }
+
+            .graph {
+                background: #6c6c6c;
+                width: 50%;
+                height: 5px;
+                margin: 10px auto 0 auto;
+            }
+            #bar {
+                display: block;
+                background: #f1f1f1;
+                height: 5px;
+                width: 10px;
+            }
+        }
+
+    </style>
+</head>
+
+<body data-spy="scroll" id="by" class="body" style="display: none">
+<div id="loading" >
+    <div class="loadinner">
+        <div class="graph"> <strong id="bar"></strong></div>
+        <div class="loading_title">页面正在加载，建议WIFI环境下阅读</div>
+    </div>
+</div>
+<div class="container" style="margin: 0px;padding: 0px;width: 100% ;display: flex;
+			text-align: center;
+			justify-content: flex-start;">
+    <div id="masonry" class="container-fluid" style="width: 100%">
+    </div>
+</div>
+<!--    <footer class="footer" >-->
+<!--		<div class="container">-->
+<!--			<p class="pull-right"><a href="#">已经到底啦</a></p>-->
+<!--		</div>-->
+<!--	</footer>-->
+<th:block th:include="include :: footer"/>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/dzk-main.js}"></script>
+<script th:src="@{/js/masonry.pkgd.min.js}"></script>
+<script th:src="@{/js/imagesloaded.pkgd.min.js}"></script>
+<script th:src="@{/js/lightbox-2.6.min.js}"></script>
+<script type="text/javascript" >
+    $(function () {
+        if (dd.env.platform==="notInDingTalk") {
+            alert("请用钉钉打开！");
+            return;
+        } else {
+            $('#by').show();
+            $('#bar').animate({width:"100px"});
+            var gw = $(".graph").width();
+            setTimeout(function(){$('#bar').animate({width:gw});},1000);
+
+            dd.ready(function() {
+                let data={};
+                // dd.ready参数为回调函数，在环境准备就绪时触发，jsapi的调用需要保证在该回调函数触发后调用，否则无效。
+                dd.runtime.permission.requestAuthCode({
+                    corpId: "ding389cf0d9a2e1cc2f",//线上
+                    // corpId: "dingdab143b5a957258df2c783f7214b6d69",//测试
+                    onSuccess: function(result) {
+                        data.code=result.code;
+                        data.title="电子刊列表";
+                        data.type=1;
+                        addAccessRecords(data);
+                    },
+                    onFail : function(err) {
+                        // $.modal.msgError("请在钉钉中打开该页面");
+                    }
+                });
+            });
+        }
+            // $('#by').show();
+            // $('#bar').animate({width:"100px"});
+            // var gw = $(".graph").width();
+            // setTimeout(function(){$('#bar').animate({width:gw});},1000);
+        function addAccessRecords(data) {
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: "/dzk/dzk/dzk-records/dzkAccessRecords",
+                data: data,
+                dataType: "json",
+                success: function (result) {
+                    if (result.code==0){
+                        console.log(result.msg)
+                    }else {
+                        console.log(result.msg)
+                    }
+                },
+                error: function (result) {
+                    console.log(result.msg)
+                }
+            });
+
+        }
+        var w = $(window).width();
+        var leixing = "";
+        var type = "";
+        if (w > 600) {
+            type = "pc";
+            leixing = "/dzk/profile/cover/iphone/"
+        } else {
+            type = "iphone";
+            leixing = "/dzk/profile/cover/iphone/"
+        }
+        var list = [
+            {
+                img: leixing + "2021公司宣传册5月28（电子版）.jpg",
+                title: "公司宣传册图片版",
+                type: type,
+                name: "zhangsan",
+            },
+            {
+                img: leixing + "海兴客户故事集图片更新（海外版）.jpg",
+                title: "海兴海外案例集图片版",
+                type: type,
+                name: "zhangsan",
+            },
+            {
+                img: leixing + "市场洞察月报（2019年3月）_00.jpg",
+                title: "市场洞察月报（2019年3月）",
+                type: type,
+                name: "zhangsan",
+            },
+            {
+                img: leixing + "市场洞察月报（2019年5月）压缩_00.jpg",
+                title: "市场洞察月报（2019年5月）",
+                type: type,
+                name: "zhangsan",
+            },
+            {
+                img: leixing + "0704_1.png",
+                title: "市场洞察月报（2019年7月）",
+                type: type,
+                name: "zhangsan",
+            },
+            {
+                img: leixing + "市场洞察月报（2019年8月）_00.jpg",
+                title: "市场洞察月报（2019年8月）",
+                type: type,
+                name: "zhangsan",
+            },
+            {
+                img: leixing + "市场洞察月报（2019年12月）_00.jpg",
+                title: "市场洞察月报（2019年12月）",
+                type: type,
+                name: "zhangsan",
+            }
+        ];
+
+        var currentIndex = 0;
+        var masNode = $('#masonry');
+        var imagesLoading = false;
+
+        function getItem(list) {
+            console.log(list)
+            let newItemContainer = $('<div/>');
+            $.each(list, function (index, item) {
+                newItemContainer.append("\t\t<div class=\"thumbnail\" style=\"opacity: 1; position: absolute; left: 0px; top: 3181px;\" onclick=\"gogo(\'" + item.title + "\',\'" + item.type +
+                    "\')\" >\n" +
+                    "\t\t\t<div class=\"imgs\">\n" +
+                    "\t\t\t\t<img src=\"" + item.img + "\" class=\"img_content\">\n" +
+                    "\t\t\t</div>\n" +
+                    // "\t\t\t<div class=\"caption\">\n" +
+                    // "\t\t\t\t<div style=\"display:flex;text-align: center;justify-content: center\">\n" +
+                    // "\t\t\t\t\t<div style='width: 50%;left:0px' > <i class=\"fa fa-eye\"style='margin-right: 10px'></i>"+item.zan+"</div>\n" +
+                    // "\t\t\t\t\t<div style='width: 50%;right:0px'> <i class=\"fa fa-thumbs-o-up\" style='margin-right: 10px'></i>"+item.myzan+"</div>\n" +
+                    // "\t\t\t\t  </div>\n" +
+                    // "\t\t\t\t<div  style=\"display:flex;justify-content: center;\">\n" +
+                    // "\t\t\t\t</div>\n" +
+                    // "\t\t\t</div>\n" +
+                    "\t\t</div>");
+            });
+            return newItemContainer.find('.thumbnail');
+        }
+
+        function initMasonry(item) {
+            var items = item.css('opacity', 0);
+            masNode.append(items);
+            imagesLoading = true;
+            masNode.imagesLoaded(function () {
+               $("#loading").hide();
+                imagesLoading = false;
+                items.css('opacity', 1);
+                masNode.masonry({
+                    itemSelector: '.thumbnail',
+                    isAnimated: false,
+                    transitionDuration: '0.5s',
+                    stagger: '0.01s',
+                    originLeft: true,
+                    columnWidth: '.thumbnail',
+                    // isFitWidth: true,
+                    horizontalOrder: true,
+                    percentPosition: true
+                });
+            });
+            // if (w<600){
+            // 	var thumbnail=document.getElementsByClassName("thumbnail");
+            // 	thumbnail.style.offsetWidth=(w-10)/2;
+            // }
+        }
+
+
+        function appendToMasonry(item) {
+            var items = item.css('opacity', 0);
+            masNode.append(items);
+            imagesLoading = true;
+            masNode.imagesLoaded(function () {
+                imagesLoading = false;
+                items.css('opacity', 1);
+                masNode.masonry('appended', items).masonry();
+            });
+
+        }
+
+
+        initMasonry(getItem(list));
+        $(window).scroll(function () {
+            if ($(document).height() - $(window).height() - $(document).scrollTop() < 100) {
+                if (!imagesLoading) {
+                    let items = getItem(list);
+                    // appendToMasonry(items);
+                }
+            }
+        });
+
+        function randomColor() {
+            var rand = Math.floor(Math.random() * 0xFFFFFF).toString(16);
+            for (; rand.length < 6;) {
+                rand = '0' + rand;
+            }
+            return '#' + rand;
+        }
+
+
+    });
+</script>
+<script type="text/javascript" th:inline="javascript">
+    function gogo(title, type) {
+        window.location.href = '/dzk/dzk/info?title=' + title + "&type=" + type;
+    }
+
+    //post请求通用跳转页面
+    function post(url, params) {
+        // 创建form元素
+        var temp_form = document.createElement("form");
+        // 设置form属性
+        temp_form.action = url;
+        temp_form.target = "_self";
+        temp_form.method = "post";
+        temp_form.style.display = "none";
+        // 处理需要传递的参数
+        for (var x in params) {
+            var opt = document.createElement("textarea");
+            opt.name = x;
+            opt.value = params[x];
+            temp_form.appendChild(opt);
+        }
+        document.body.appendChild(temp_form);
+        // 提交表单
+        temp_form.submit();
+    }
+
+    // let data={};
+    // data.userid="80007635";
+    // data.title="电子刊列表";
+    // data.type=1;
+    // addAccessRecords(data);
+</script>
+
+</body>
+</html>

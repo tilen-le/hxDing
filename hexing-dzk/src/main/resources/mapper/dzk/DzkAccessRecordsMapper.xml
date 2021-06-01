@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hexing.dzk.mapper.DzkAccessRecordsMapper">
+    
+    <resultMap type="DzkAccessRecords" id="DzkAccessRecordsResult">
+        <result property="id"    column="id"    />
+        <result property="dzkId"    column="dzk_id"    />
+        <result property="userid"    column="userid"    />
+        <result property="type"    column="type"    />
+        <result property="title"    column="title"    />
+        <result property="accessTime"    column="access_time"    />
+    </resultMap>
+
+    <sql id="selectDzkAccessRecordsVo">
+        select id, dzk_id, userid, type, title, access_time from dzk_access_records
+    </sql>
+
+    <select id="selectDzkAccessRecordsList" parameterType="DzkAccessRecords" resultMap="DzkAccessRecordsResult">
+        <include refid="selectDzkAccessRecordsVo"/>
+        <where>  
+            <if test="dzkId != null "> and dzk_id = #{dzkId}</if>
+            <if test="userid != null  and userid != ''"> and userid = #{userid}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="accessTime != null "> and access_time = #{accessTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectDzkAccessRecordsById" parameterType="Long" resultMap="DzkAccessRecordsResult">
+        <include refid="selectDzkAccessRecordsVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertDzkAccessRecords" parameterType="DzkAccessRecords" useGeneratedKeys="true" keyProperty="id">
+        insert into dzk_access_records
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="dzkId != null">dzk_id,</if>
+            <if test="userid != null and userid != ''">userid,</if>
+            <if test="type != null">type,</if>
+            <if test="title != null">title,</if>
+            <if test="accessTime != null">access_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="dzkId != null">#{dzkId},</if>
+            <if test="userid != null and userid != ''">#{userid},</if>
+            <if test="type != null">#{type},</if>
+            <if test="title != null">#{title},</if>
+            <if test="accessTime != null">#{accessTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDzkAccessRecords" parameterType="DzkAccessRecords">
+        update dzk_access_records
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="dzkId != null">dzk_id = #{dzkId},</if>
+            <if test="userid != null and userid != ''">userid = #{userid},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="title != null">title = #{title},</if>
+            <if test="accessTime != null">access_time = #{accessTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDzkAccessRecordsById" parameterType="Long">
+        delete from dzk_access_records where id = #{id}
+    </delete>
+
+    <delete id="deleteDzkAccessRecordsByIds" parameterType="String">
+        delete from dzk_access_records where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
