@@ -1,7 +1,10 @@
 package com.hexing.dzk.service;
 
+import com.hexing.common.annotation.DataSource;
+import com.hexing.common.enums.DataSourceType;
 import com.hexing.common.utils.StringUtils;
 import com.hexing.dzk.domain.SetConfigurationToken;
+import com.hexing.dzk.mapper.UtilsMapper;
 import com.hexing.dzk.utils.DingUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +36,8 @@ public class UtilsService {
     private String appsecret;
     @Autowired
     ISetConfigurationTokenService tokenService;
+    @Autowired
+    UtilsMapper utilsMapper;
 
     //获取通用token
     public String getAccessToken(String key, String type) {
@@ -42,7 +47,7 @@ public class UtilsService {
             settoken.setOther("prod");
         } else if ("dev".equals(type)) {
             settoken.setOther("dev");
-        }  else {
+        } else {
             settoken.setOther(vsesion_type);
         }
         settoken.setSetKey(key);
@@ -69,6 +74,11 @@ public class UtilsService {
             tokenService.updateSetConfigurationToken(setConfigurationTokens.get(0));
             return token;
         }
+    }
+
+    @DataSource(value = DataSourceType.SLAVE)
+    public String getDeptOne(String userid) {
+        return utilsMapper.getDeptOne(userid);
     }
 
 }

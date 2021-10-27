@@ -11,7 +11,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * 电子刊访问历史对象 dzk_access_records
  * 
  * @author zhuzl
- * @date 2021-05-28
+ * @date 2021-06-08
  */
 public class DzkAccessRecords extends BaseEntity
 {
@@ -36,9 +36,17 @@ public class DzkAccessRecords extends BaseEntity
     @Excel(name = "标题")
     private String title;
 
+    /** 一级部门名称 */
+    @Excel(name = "一级部门名称")
+    private String deptOne;
+
+    /** 备用 */
+//    @Excel(name = "备用")
+    private String other;
+
     /** 访问时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "访问时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss ")
+    @Excel(name = "访问时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date accessTime;
 
     public void setId(Long id) 
@@ -86,6 +94,24 @@ public class DzkAccessRecords extends BaseEntity
     {
         return title;
     }
+    public void setDeptOne(String deptOne) 
+    {
+        this.deptOne = deptOne;
+    }
+
+    public String getDeptOne() 
+    {
+        return deptOne;
+    }
+    public void setOther(String other) 
+    {
+        this.other = other;
+    }
+
+    public String getOther() 
+    {
+        return other;
+    }
     public void setAccessTime(Date accessTime) 
     {
         this.accessTime = accessTime;
@@ -98,12 +124,14 @@ public class DzkAccessRecords extends BaseEntity
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
+        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("id", getId())
             .append("dzkId", getDzkId())
             .append("userid", getUserid())
             .append("type", getType())
             .append("title", getTitle())
+            .append("deptOne", getDeptOne())
+            .append("other", getOther())
             .append("accessTime", getAccessTime())
             .toString();
     }

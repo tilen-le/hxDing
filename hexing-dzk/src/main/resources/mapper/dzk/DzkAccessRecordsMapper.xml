@@ -10,11 +10,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="userid"    column="userid"    />
         <result property="type"    column="type"    />
         <result property="title"    column="title"    />
+        <result property="deptOne"    column="dept_one"    />
+        <result property="other"    column="other"    />
         <result property="accessTime"    column="access_time"    />
     </resultMap>
 
     <sql id="selectDzkAccessRecordsVo">
-        select id, dzk_id, userid, type, title, access_time from dzk_access_records
+        select id, dzk_id, userid, type, title, dept_one, other, access_time from dzk_access_records
     </sql>
 
     <select id="selectDzkAccessRecordsList" parameterType="DzkAccessRecords" resultMap="DzkAccessRecordsResult">
@@ -24,7 +26,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="userid != null  and userid != ''"> and userid = #{userid}</if>
             <if test="type != null "> and type = #{type}</if>
             <if test="title != null  and title != ''"> and title = #{title}</if>
-            <if test="accessTime != null "> and access_time = #{accessTime}</if>
+            <if test="deptOne != null  and deptOne != ''"> and dept_one = #{deptOne}</if>
+            <if test="other != null  and other != ''"> and other = #{other}</if>
+            <if test="params.beginAccessTime != null and params.beginAccessTime != '' and params.endAccessTime != null and params.endAccessTime != ''"> and access_time between #{params.beginAccessTime} and #{params.endAccessTime}</if>
         </where>
     </select>
     
@@ -40,6 +44,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="userid != null and userid != ''">userid,</if>
             <if test="type != null">type,</if>
             <if test="title != null">title,</if>
+            <if test="deptOne != null">dept_one,</if>
+            <if test="other != null">other,</if>
             <if test="accessTime != null">access_time,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -47,6 +53,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="userid != null and userid != ''">#{userid},</if>
             <if test="type != null">#{type},</if>
             <if test="title != null">#{title},</if>
+            <if test="deptOne != null">#{deptOne},</if>
+            <if test="other != null">#{other},</if>
             <if test="accessTime != null">#{accessTime},</if>
          </trim>
     </insert>
@@ -58,6 +66,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="userid != null and userid != ''">userid = #{userid},</if>
             <if test="type != null">type = #{type},</if>
             <if test="title != null">title = #{title},</if>
+            <if test="deptOne != null">dept_one = #{deptOne},</if>
+            <if test="other != null">other = #{other},</if>
             <if test="accessTime != null">access_time = #{accessTime},</if>
         </trim>
         where id = #{id}

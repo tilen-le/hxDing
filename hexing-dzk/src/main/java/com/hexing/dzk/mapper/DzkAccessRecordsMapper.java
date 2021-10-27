@@ -7,7 +7,7 @@ import com.hexing.dzk.domain.DzkAccessRecords;
  * 电子刊访问历史Mapper接口
  * 
  * @author zhuzl
- * @date 2021-05-28
+ * @date 2021-06-08
  */
 public interface DzkAccessRecordsMapper 
 {

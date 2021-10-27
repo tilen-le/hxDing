@@ -9,8 +9,8 @@ import com.hexing.dzk.utils.DingUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,31 +29,31 @@ import com.hexing.common.core.page.TableDataInfo;
  * 电子刊访问历史Controller
  * 
  * @author zhuzl
- * @date 2021-05-28
+ * @date 2021-06-08
  */
 @Slf4j
 @Controller
-@RequestMapping("/dzk/dzk-records")
+@RequestMapping("/dzk/records")
 public class DzkAccessRecordsController extends BaseController
 {
-    private String prefix = "dzk/dzk-records";
+    private String prefix = "dzk/records";
 
     @Autowired
     private IDzkAccessRecordsService dzkAccessRecordsService;
     @Autowired
     private UtilsService utilsService;
 
-    @RequiresPermissions("dzk:dzk-records:view")
+    @RequiresPermissions("dzk:records:view")
     @GetMapping()
-    public String dzkRecords()
+    public String records()
     {
-        return prefix + "/dzk-records";
+        return prefix + "/records";
     }
 
     /**
      * 查询电子刊访问历史列表
      */
-    @RequiresPermissions("dzk:dzk-records:list")
+    @RequiresPermissions("dzk:records:list")
     @PostMapping("/list")
     @ResponseBody
     public TableDataInfo list(DzkAccessRecords dzkAccessRecords)
@@ -66,7 +66,7 @@ public class DzkAccessRecordsController extends BaseController
     /**
      * 导出电子刊访问历史列表
      */
-    @RequiresPermissions("dzk:dzk-records:export")
+    @RequiresPermissions("dzk:records:export")
     @Log(title = "电子刊访问历史", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     @ResponseBody
@@ -89,7 +89,7 @@ public class DzkAccessRecordsController extends BaseController
     /**
      * 新增保存电子刊访问历史
      */
-    @RequiresPermissions("dzk:dzk-records:add")
+    @RequiresPermissions("dzk:records:add")
     @Log(title = "电子刊访问历史", businessType = BusinessType.INSERT)
     @PostMapping("/add")
     @ResponseBody
@@ -112,7 +112,7 @@ public class DzkAccessRecordsController extends BaseController
     /**
      * 修改保存电子刊访问历史
      */
-    @RequiresPermissions("dzk:dzk-records:edit")
+    @RequiresPermissions("dzk:records:edit")
     @Log(title = "电子刊访问历史", businessType = BusinessType.UPDATE)
     @PostMapping("/edit")
     @ResponseBody
@@ -124,7 +124,7 @@ public class DzkAccessRecordsController extends BaseController
     /**
      * 删除电子刊访问历史
      */
-    @RequiresPermissions("dzk:dzk-records:remove")
+    @RequiresPermissions("dzk:records:remove")
     @Log(title = "电子刊访问历史", businessType = BusinessType.DELETE)
     @PostMapping( "/remove")
     @ResponseBody
@@ -134,8 +134,8 @@ public class DzkAccessRecordsController extends BaseController
     }
 
     /*
-    自定义添加记录
-     */
+      自定义添加记录
+       */
     @PostMapping("/dzkAccessRecords")
     @ResponseBody
     public AjaxResult dzkAccessRecords(DzkAccessRecordsNew dzkAccessRecordsNew)
@@ -155,6 +155,10 @@ public class DzkAccessRecordsController extends BaseController
         }
         if (StringUtils.isNotEmpty(userid)){
             dzkAccessRecords.setUserid(userid);
+        }
+        String dept=utilsService.getDeptOne(userid);
+        if (StringUtils.isNotEmpty(dept)){
+            dzkAccessRecords.setDeptOne(dept);
         }
         log.info("添加记录"+dzkAccessRecords.toString());
         return toAjax(dzkAccessRecordsService.insertDzkAccessRecords(dzkAccessRecords));
