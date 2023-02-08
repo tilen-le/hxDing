@@ -2,23 +2,16 @@ package com.hexing.dzk.controller;
 
 import com.hexing.common.annotation.Log;
 import com.hexing.common.config.HeXingConfig;
-import com.hexing.common.constant.UserConstants;
 import com.hexing.common.core.controller.BaseController;
 import com.hexing.common.core.domain.AjaxResult;
-import com.hexing.common.core.domain.entity.SysUser;
 import com.hexing.common.core.page.TableDataInfo;
 import com.hexing.common.enums.BusinessType;
-import com.hexing.common.utils.ShiroUtils;
 import com.hexing.common.utils.StringUtils;
 import com.hexing.common.utils.file.FileUploadUtils;
-import com.hexing.dzk.domain.BookAttach;
 import com.hexing.dzk.domain.EleBook;
-import com.hexing.dzk.zxy.IBookService;
-import com.hexing.system.domain.SysPost;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
+import com.hexing.dzk.service.IBookService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -68,8 +61,8 @@ public class EleBookController extends BaseController {
         return AjaxResult.success(list);
     }
 
-    @GetMapping("/ding")
-    public String ding(ModelMap map, HttpServletRequest request) {
+    @GetMapping("/dingPhone")
+    public String dingIphone(ModelMap map, HttpServletRequest request) {
         EleBook eleBook = new EleBook();
         eleBook.setStatus("1");
         List<EleBook> list = bookService.getBookList(eleBook);
@@ -79,7 +72,21 @@ public class EleBookController extends BaseController {
             }
         }
         map.put("bookList", list);
-        return prefix + "/index";
+        return prefix + "/phone_index";
+    }
+
+    @GetMapping("/dingPc")
+    public String dingPc(ModelMap map, HttpServletRequest request) {
+        EleBook eleBook = new EleBook();
+        eleBook.setStatus("1");
+        List<EleBook> list = bookService.getBookList(eleBook);
+        for (EleBook book : list) {
+            if (StringUtils.isBlank(book.getCoverUrl())) {
+                book.setCoverUrl(defaultUrl);
+            }
+        }
+        map.put("bookList", list);
+        return prefix + "/pc_index";
     }
 
 

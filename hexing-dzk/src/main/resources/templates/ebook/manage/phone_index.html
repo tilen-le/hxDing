@@ -33,6 +33,9 @@
         .ibox {
             height: auto !important;
         }
+        .ibox-content{
+            padding: 0px !important;
+        }
     </style>
 
     <script type="text/javascript" th:src="@{/dzk/jquery.min.1.7.js}"></script>
@@ -50,9 +53,7 @@
                 <div th:if="${itemStat.index % 3 == 0}" class="ibox" th:onclick="goAttachList([[${item.id}]])">
                     <div class="ibox-content" >
                         <div class="row">
-
-                                <img class="col-xs-12" th:src="@{${item.coverUrl}}" >
-
+                            <img class="col-xs-12" th:src="@{${item.coverUrl}}" >
                         </div>
                     </div>
                 </div>
@@ -63,9 +64,7 @@
                 <div th:if="${itemStat.index % 3 == 1}" class="ibox" th:onclick="goAttachList([[${item.id}]])">
                     <div class="ibox-content" >
                         <div class="row">
-
-                                <img class="col-xs-12" th:src="@{${item.coverUrl}}" >
-
+                            <img class="col-xs-12" th:src="@{${item.coverUrl}}" >
                         </div>
                     </div>
                 </div>
@@ -76,9 +75,7 @@
                 <div th:if="${itemStat.index % 3 == 2}" class="ibox" th:onclick="goAttachList([[${item.id}]])">
                     <div class="ibox-content" >
                         <div class="row">
-
-                                <img class="col-xs-12" th:src="@{${item.coverUrl}}" >
-
+                            <img class="col-xs-12" th:src="@{${item.coverUrl}}" >
                         </div>
                     </div>
                 </div>

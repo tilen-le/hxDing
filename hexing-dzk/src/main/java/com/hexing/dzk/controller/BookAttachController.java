@@ -9,7 +9,7 @@ import com.hexing.common.enums.BusinessType;
 import com.hexing.common.utils.StringUtils;
 import com.hexing.common.utils.file.FileUploadUtils;
 import com.hexing.dzk.domain.BookAttach;
-import com.hexing.dzk.zxy.IBookService;
+import com.hexing.dzk.service.IBookService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;

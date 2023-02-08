@@ -1,4 +1,4 @@
-package com.hexing.dzk.zxy;
+package com.hexing.dzk.service;
 
 import com.hexing.dzk.domain.BookAttach;
 import com.hexing.dzk.domain.EleBook;

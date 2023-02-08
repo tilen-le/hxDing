@@ -1,11 +1,10 @@
-package com.hexing.dzk.zxy;
+package com.hexing.dzk.service.impl;
 
 import com.hexing.common.core.text.Convert;
-import com.hexing.common.exception.BusinessException;
 import com.hexing.dzk.domain.BookAttach;
 import com.hexing.dzk.domain.EleBook;
 import com.hexing.dzk.mapper.EleBookMapper;
-import com.hexing.system.domain.SysPost;
+import com.hexing.dzk.service.IBookService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
