@@ -1,0 +1,71 @@
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header(${title})"/>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="wpk-bid" content="dta_1_1196893985">
+    <script type="text/javascript"  src="https://g.alicdn.com/dingding/dingtalk-jsapi/2.10.3/dingtalk.open.js"></script>
+    <script>
+        !(function (c, i, e, b) {
+            var h = i.createElement("script");
+            var f = i.getElementsByTagName("script")[0];
+            h.type = "text/javascript";
+            h.crossorigin = true;
+            h.onload = function () {
+                c[b] || (c[b] = new c.wpkReporter({bid: "dta_1_1196893985"}));
+                c[b].installAll()
+            };
+            f.parentNode.insertBefore(h, f);
+            h.src = e
+        })(window, document, "https://g.alicdn.com/woodpeckerx/jssdk??wpkReporter.js", "__wpk");</script>
+    <link th:href="@{/dzk/demo.css}" rel="stylesheet" media="all"/>
+    <link th:href="@{/dzk/basic.css}" rel="stylesheet" media="min-width: 800px"/>
+    <link th:href="@{/dzk/notification.css}" rel="stylesheet" media="all"/>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+    <!--[if IE]>
+    <![endif]-->
+    <style type="text/css">
+
+    </style>
+
+    <script type="text/javascript" th:src="@{/dzk/jquery.min.1.7.js}"></script>
+    <script type="text/javascript" th:src="@{/dzk/turn.js}"></script>
+    <script type="text/javascript" th:src="@{/dzk/jquery.qrcode.min.js}"></script>
+    <script type="text/javascript" th:src="@{/dzk/modernizr.2.5.3.min.js}"></script>
+    <script th:src="@{/js/imagesloaded.pkgd.min.js}"></script>
+   </head>
+<body class="gray-bg">
+
+<div style="text-align: center">
+    <div class="row">
+    <div class="col-xs-12">
+        <div class="col-xs-2"></div>
+        <img class="col-xs-8" th:src=" @{${attach.attachUrl}}" >
+        <div class="col-xs-2"></div>
+    </div>
+    </div>
+
+</div>
+
+
+<th:block th:include="include :: footer" />
+
+<script type="text/javascript" th:inline="javascript">
+
+</script>
+<script type="text/javascript" th:inline="javascript">
+    $(function () {
+        var attach=[[${attach}]];
+        if (attach == null || attach.attachUrl == null) {
+            $.modal.msgError("本期刊没有上传内容");
+        }
+    })
+
+</script>
+</body>
+</html>

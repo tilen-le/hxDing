@@ -9,15 +9,15 @@ hexing:
   # 实例演示开关
   demoEnabled: true
   # 文件路径 示例（ Windows配置D:/hexing/uploadPath，Linux配置 /home/hexing/uploadPath）
-#  profile: D:/dzk/uploadPath
-  profile: /opt/dzk/uploadPath
+  profile: E:/dzk/uploadPath
+#  profile: /opt/dzk/uploadPath
   # 获取ip地址开关
   addressEnabled: false
 
 # 开发环境配置
 server:
   # 服务器的HTTP端口，默认为80
-  port: 80
+  port: 8080
   servlet:
     # 应用的访问路径
     context-path: /dzk
@@ -28,7 +28,7 @@ server:
     max-threads: 800
     # Tomcat启动初始化的线程数，默认值25
     min-spare-threads: 30
- 
+
 # 日志配置
 logging:
   level:
@@ -56,9 +56,9 @@ spring:
   jackson:
     time-zone: GMT+8
     date-format: yyyy-MM-dd HH:mm:ss
-  profiles: 
-#    active: prod
-    active: dev
+  profiles:
+    active: prod
+#    active: dev
   # 文件上传
   servlet:
      multipart:
@@ -82,11 +82,11 @@ mybatis:
     configLocation: classpath:mybatis/mybatis-config.xml
 
 # PageHelper分页插件
-pagehelper: 
+pagehelper:
   helperDialect: mysql
   reasonable: true
   supportMethodsArguments: true
-  params: count=countSql 
+  params: count=countSql
 
 # Shiro
 shiro:
@@ -96,14 +96,14 @@ shiro:
     # 权限认证失败地址
     unauthorizedUrl: /unauth
     # 首页地址
-    indexUrl: /index
+    indexUrl: /dzk/index
     # 验证码开关
     captchaEnabled: false
     # 验证码类型 math 数组计算 char 字符
     captchaType: math
   cookie:
     # 设置Cookie的域名 默认空，即当前访问的域名
-    domain: 
+    domain:
     # 设置cookie的有效访问路径
     path: /
     # 设置HttpOnly属性
@@ -123,7 +123,7 @@ shiro:
     kickoutAfter: false
 
 # 防止XSS攻击
-xss: 
+xss:
   # 过滤开关
   enabled: true
   # 排除链接（多个用逗号分隔）

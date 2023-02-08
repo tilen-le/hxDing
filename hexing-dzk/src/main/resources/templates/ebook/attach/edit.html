@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('修改期刊')" />
+</head>
+<body class="white-bg">
+	<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+		<form class="form-horizontal m" id="form-attach-edit" th:object="${attach}">
+			<input id="postId" name="postId" type="hidden" th:field="*{id}"/>
+			<div class="form-group">
+				<label class="col-sm-3 control-label is-required">期刊名称：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" name="name" id="name" th:field="*{name}" required>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label is-required">显示顺序：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" name="sorted" id="sorted" th:field="*{sorted}" required>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">状态：</label>
+				<div class="col-sm-8">
+					<div class="radio-box" th:each="dict : ${@dict.getType('ebook_status')}">
+						<input type="radio" th:id="${dict.dictCode}" name="status" th:value="${dict.dictValue}" th:field="*{status}">
+						<label th:for="${dict.dictCode}" th:text="${dict.dictLabel}"></label>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">简介：</label>
+				<div class="col-sm-8">
+					<textarea id="remark" name="remark" class="form-control" rows="4" maxlength="50">[[*{remark}]]</textarea>
+				</div>
+			</div>
+		</form>
+	</div>
+	<th:block th:include="include :: footer" />
+	<script type="text/javascript">
+		var prefix = ctx + "ebook/attach";
+
+		$("#form-attach-edit").validate({
+			onkeyup: false,
+			rules:{
+				sorted:{
+					digits:true
+				},
+			},
+			messages: {
+		    },
+		    focusCleanup: true
+		});
+
+		function submitHandler() {
+	        if ($.validate.form()) {
+	        	$.operate.save(prefix + "/edit", $('#form-attach-edit').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

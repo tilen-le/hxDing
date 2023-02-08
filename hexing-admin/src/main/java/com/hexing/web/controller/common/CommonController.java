@@ -21,7 +21,7 @@ import com.hexing.common.utils.file.FileUtils;
 
 /**
  * 通用请求处理
- * 
+ *
  * @author hexing
  */
 @Controller
@@ -34,7 +34,7 @@ public class CommonController
 
     /**
      * 通用下载请求
-     * 
+     *
      * @param fileName 文件名称
      * @param delete 是否删除
      */
@@ -48,7 +48,7 @@ public class CommonController
                 throw new Exception(StringUtils.format("文件名称({})非法，不允许下载。 ", fileName));
             }
             String realFileName = System.currentTimeMillis() + fileName.substring(fileName.indexOf("_") + 1);
-            String filePath = HeXingConfig.getDownloadPath() + fileName;
+            String filePath = HeXingConfig.getUploadPath() + fileName;
 
             response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
             FileUtils.setAttachmentResponseHeader(response, realFileName);
@@ -57,6 +57,26 @@ public class CommonController
             {
                 FileUtils.deleteFile(filePath);
             }
+        }
+        catch (Exception e)
+        {
+            log.error("下载文件失败", e);
+        }
+    }
+
+    @GetMapping("common/download2")
+    public void fileDownload2(String fileName, HttpServletResponse response)
+    {
+        try
+        {
+            String realFileName = System.currentTimeMillis() + fileName.substring(fileName.indexOf("_") + 1);
+            String localPath = HeXingConfig.getProfile();
+            String downloadPath = localPath + StringUtils.substringAfter(fileName, Constants.RESOURCE_PREFIX);
+            // 下载名称
+            String downloadName = StringUtils.substringAfterLast(downloadPath, "/");
+            response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+            FileUtils.setAttachmentResponseHeader(response, realFileName);
+            FileUtils.writeBytes(downloadPath, response.getOutputStream());
         }
         catch (Exception e)
         {

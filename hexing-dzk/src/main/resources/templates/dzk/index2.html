@@ -175,10 +175,10 @@
 <script th:src="@{/js/lightbox-2.6.min.js}"></script>
 <script type="text/javascript" >
     $(function () {
-        if (dd.env.platform==="notInDingTalk") {
-            alert("请用钉钉打开！");
-            return;
-        } else {
+        // if (dd.env.platform==="notInDingTalk") {
+        //     alert("请用钉钉打开！");
+        //     return;
+        // } else {
             $('#by').show();
             $('#bar').animate({width:"100px"});
             var gw = $(".graph").width();
@@ -194,14 +194,14 @@
                         data.code=result.code;
                         data.title="电子刊列表";
                         data.type=1;
-                        addAccessRecords(data);
+                        // addAccessRecords(data);
                     },
                     onFail : function(err) {
                         // $.modal.msgError("请在钉钉中打开该页面");
                     }
                 });
             });
-        }
+        // }
             // $('#by').show();
             // $('#bar').animate({width:"100px"});
             // var gw = $(".graph").width();
@@ -224,75 +224,51 @@
                     console.log(result.msg)
                 }
             });
-
         }
-        var w = $(window).width();
+        var width = $(window).width();
         var leixing = "";
         var type = "";
-        if (w > 600) {
+        if (width > 600) {
             type = "pc";
             leixing = "/dzk/profile/cover/iphone/"
         } else {
             type = "iphone";
             leixing = "/dzk/profile/cover/iphone/"
         }
-        var list = [
-            {
-                img: leixing + "2021公司宣传册5月28（电子版）.jpg",
-                title: "公司宣传册图片版",
-                type: type,
-                name: "zhangsan",
-            },
-            {
-                img: leixing + "海兴客户故事集图片更新（海外版）.jpg",
-                title: "海兴海外案例集图片版",
-                type: type,
-                name: "zhangsan",
-            },
-            {
-                img: leixing + "市场洞察月报（2019年3月）_00.jpg",
-                title: "市场洞察月报（2019年3月）",
-                type: type,
-                name: "zhangsan",
-            },
-            {
-                img: leixing + "市场洞察月报（2019年5月）压缩_00.jpg",
-                title: "市场洞察月报（2019年5月）",
-                type: type,
-                name: "zhangsan",
-            },
-            {
-                img: leixing + "0704_1.png",
-                title: "市场洞察月报（2019年7月）",
-                type: type,
-                name: "zhangsan",
-            },
-            {
-                img: leixing + "市场洞察月报（2019年8月）_00.jpg",
-                title: "市场洞察月报（2019年8月）",
-                type: type,
-                name: "zhangsan",
-            },
-            {
-                img: leixing + "市场洞察月报（2019年12月）_00.jpg",
-                title: "市场洞察月报（2019年12月）",
-                type: type,
-                name: "zhangsan",
-            }
-        ];
-
+        var data = {"status":"1"};
+        var list = [];
+        getBookList(data);
+        function getBookList(data) {
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: ctx + "/ebook/manage/all",
+                data: data,
+                dataType: "json",
+                async: false,
+                success: function (result) {
+                    if (result.code==0) {
+                        list =  result.data;
+                    } else {
+                        $.modal.msgError(JSON.stringify(result.msg));
+                    }
+                },
+                error: function (result) {
+                    $.modal.msgError(JSON.stringify(result.msg));
+                }
+            });
+        }
         var currentIndex = 0;
         var masNode = $('#masonry');
         var imagesLoading = false;
 
         function getItem(list) {
-            console.log(list)
             let newItemContainer = $('<div/>');
             $.each(list, function (index, item) {
-                newItemContainer.append("\t\t<div class=\"thumbnail\" style=\"opacity: 1; position: absolute; left: 0px; top: 3181px;\" onclick=\"gogo(\'" + item.title + "\',\'" + item.type +
+                newItemContainer.append("\t\t<div class=\"thumbnail\" style=\"opacity: 1; position: absolute; left: 0px; top: 3181px;\" onclick=\"gogo(\'" + item.id + "\',\'" + item.status +
                     "\')\" >\n" +
                     "\t\t\t<div class=\"imgs\">\n" +
-                    "\t\t\t\t<img src=\"" + item.img + "\" class=\"img_content\">\n" +
+                    "\t\t\t\t<img src=\"" + "/dzk"+ item.coverUrl + "\" class=\"img_content\">\n" +
                     "\t\t\t</div>\n" +
                     // "\t\t\t<div class=\"caption\">\n" +
                     // "\t\t\t\t<div style=\"display:flex;text-align: center;justify-content: center\">\n" +
@@ -369,8 +345,8 @@
     });
 </script>
 <script type="text/javascript" th:inline="javascript">
-    function gogo(title, type) {
-        window.location.href = '/dzk/dzk/info?title=' + title + "&type=" + type;
+    function gogo(id, type) {
+        window.location.href = '/dzk/ebook/attach/jump/detail?id=' + id + "&status=1";
     }
 
     //post请求通用跳转页面
