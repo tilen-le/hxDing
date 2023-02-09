@@ -61,6 +61,11 @@ public class EleBookController extends BaseController {
         return AjaxResult.success(list);
     }
 
+/*    @GetMapping("/ding")
+    public String ding() {
+        return prefix + "/index";
+    }*/
+
     @GetMapping("/dingPhone")
     public String dingIphone(ModelMap map, HttpServletRequest request) {
         EleBook eleBook = new EleBook();

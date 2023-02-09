@@ -142,6 +142,8 @@ public class BookAttachController extends BaseController {
         }
     }
 
+
+
     @GetMapping("/jump/detail")
     public String jump(HttpServletRequest request, ModelMap mmap) {
         String from = request.getParameter("from");
@@ -162,6 +164,13 @@ public class BookAttachController extends BaseController {
         } else {
             return prefix + "/dzk_iphone_info";
         }
+    }
+
+    @GetMapping("/link")
+    public String link(HttpServletRequest request, ModelMap mmap) {
+        String id = request.getParameter("id");
+        mmap.put("id", id);
+        return prefix + "/dzk_info";
     }
 
     @GetMapping("/readAttach")

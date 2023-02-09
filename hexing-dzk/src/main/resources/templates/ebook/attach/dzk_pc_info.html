@@ -89,22 +89,21 @@
 <th:block th:include="include :: footer" />
 
 <script type="text/javascript" th:inline="javascript">
-    $(function () {
-        $(function() {
-            if (dd.env.platform=="notInDingTalk") {
-                alert("请用钉钉打开！");
-                return;
-            } else {
-                $('#dataDiv').show();
-                var attachList=[[${attachList}]];
-                if (attachList.length == 0) {
-                    $.modal.msgError("本刊暂时没有任何期刊");
-                }
+    $(function() {
+        if (dd.env.platform=="notInDingTalk") {
+            alert("请用钉钉打开！");
+            return;
+        } else {
+            $('#dataDiv').show();
+            var attachList=[[${attachList}]];
+            if (attachList.length == 0) {
+                $.modal.msgError("本刊暂时没有任何期刊");
             }
+        }
     })
 
     function readAttach(id) {
-        window.location.href = '/dzk/ebook/attach/readAttach?id=' + id + "&from=pc";;
+        window.location.href = '/dzk/ebook/attach/readAttach?id=' + id + "&from=pc";
     }
 
 </script>
