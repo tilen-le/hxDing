@@ -22,7 +22,16 @@
             };
             f.parentNode.insertBefore(h, f);
             h.src = e
-        })(window, document, "https://g.alicdn.com/woodpeckerx/jssdk??wpkReporter.js", "__wpk");</script>
+        })(window, document, "https://g.alicdn.com/woodpeckerx/jssdk??wpkReporter.js", "__wpk");
+
+        if(window.screen.width >= 600){
+            document.write('<link rel="stylesheet" href="../css/pc.css">');
+        }
+        else{
+            document.write('<link rel="stylesheet" href="../css/phone.css">');
+        }
+
+    </script>
     <link th:href="@{/dzk/demo.css}" rel="stylesheet" media="all"/>
     <link th:href="@{/dzk/basic.css}" rel="stylesheet" media="min-width: 800px"/>
     <link th:href="@{/dzk/notification.css}" rel="stylesheet" media="all"/>
@@ -50,7 +59,7 @@
 </head>
 <body class="gray-bg">
 
-<div class="wrapper wrapper-content animated fadeInRight" style="display: flex;background-color: #89898905;">
+<div id="dataDiv" class="wrapper wrapper-content animated fadeInRight" style="display: flex;background-color: #89898905;display: none;">
 <div style="display: flex;width: 1000px;margin: auto;margin-top: 10px;">
     <div style="width: 820px;margin: auto;">
         <div th:each="item,itemStat:${bookList}">
@@ -70,10 +79,16 @@
 <th:block th:include="include :: footer" />
 
 <script type="text/javascript" th:inline="javascript">
-    $(function () {
-        var bookList=[[${bookList}]];
-        if (bookList.length == 0) {
-            $.modal.msgError("无任何电子刊");
+    $(function() {
+        if (dd.env.platform=="notInDingTalk") {
+            alert("请用钉钉打开！");
+            return;
+        } else {
+            $('#dataDiv').show();
+            var bookList=[[${bookList}]];
+            if (bookList.length == 0) {
+                $.modal.msgError("无任何电子刊");
+            }
         }
     })
 

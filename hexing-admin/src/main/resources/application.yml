@@ -7,10 +7,10 @@ hexing:
   # 版权年份
   copyrightYear: 2021
   # 实例演示开关
-  demoEnabled: true
+  demoEnabled: false
   # 文件路径 示例（ Windows配置D:/hexing/uploadPath，Linux配置 /home/hexing/uploadPath）
-  profile: E:/dzk/uploadPath
-#  profile: /opt/dzk/uploadPath
+#  profile: E:/dzk/uploadPath
+  profile: /opt/dzk/uploadPath
   # 获取ip地址开关
   addressEnabled: false
 

@@ -43,8 +43,8 @@
 </head>
 <body class="gray-bg">
 
-<div class="wrapper wrapper-content animated fadeInRight" style="display: flex;background-color: #89898905;">
-    <div style="display: flex;width: 1000px;margin: auto;margin-top: 10px;">
+<div id="dataDiv" class="wrapper wrapper-content animated fadeInRight" style="display: flex;background-color: #89898905;display: none;">
+    <div style="display: flex;width: 1000px;margin: auto;margin-top: 5px;">
         <div style="width: 840px;margin: auto;">
             <img class="imgContain" th:src="@{${attach.attachUrl}}">
         </div>
@@ -57,10 +57,16 @@
 
     </script>
     <script type="text/javascript" th:inline="javascript">
-        $(function () {
-            var attach = [[${attach}]];
-            if (attach == null || attach.attachUrl == null) {
-                $.modal.msgError("本期刊没有上传内容");
+        $(function() {
+            if (dd.env.platform=="notInDingTalk") {
+                alert("请用钉钉打开！");
+                return;
+            } else {
+                $('#dataDiv').show();
+                var attach = [[${attach}]];
+                if (attach == null || attach.attachUrl == null) {
+                    $.modal.msgError("本期刊没有上传内容");
+                }
             }
         })
 

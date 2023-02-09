@@ -31,14 +31,14 @@
     <![endif]-->
     <style type="text/css">
         .divContain {
-            width: 120px;
-            height: 212px;
+            width: 108px;
+            height: 190px;
             margin: 0 5px 22px 0;
             float: left;
         }
         .imgContain {
-            width: 120px;
-            height: 212px;
+            width: 108px;
+            height: 190px;
         }
     </style>
 
@@ -50,9 +50,9 @@
 </head>
 <body class="gray-bg">
 
-<div class="wrapper wrapper-content animated fadeInRight" style="display: flex;background-color: #89898905;">
-    <div style="display: flex;width: 400px;margin: auto;margin-top: 5px;">
-        <div style="width: 380px;margin: auto;">
+<div id="dataDiv" class="wrapper wrapper-content animated fadeInRight" style="display: flex;background-color: #89898905;display: none;">
+    <div style="display: flex;width: 350px;margin: auto;margin-top: 5px;">
+        <div style="width: 340px;margin: auto;">
             <div th:each="item,itemStat:${bookList}">
                 <div class="divContain" th:onclick="goAttachList([[${item.id}]])">
                     <div>
@@ -70,10 +70,16 @@
 <th:block th:include="include :: footer" />
 
 <script type="text/javascript" th:inline="javascript">
-    $(function () {
-        var bookList=[[${bookList}]];
-        if (bookList.length == 0) {
-            $.modal.msgError("无任何电子刊");
+    $(function() {
+        if (dd.env.platform=="notInDingTalk") {
+            alert("请用钉钉打开！");
+            return;
+        } else {
+            $('#dataDiv').show();
+            var bookList=[[${bookList}]];
+            if (bookList.length == 0) {
+                $.modal.msgError("无任何电子刊");
+            }
         }
     })
 

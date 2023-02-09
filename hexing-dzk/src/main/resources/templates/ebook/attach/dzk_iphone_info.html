@@ -31,14 +31,14 @@
     <![endif]-->
     <style type="text/css">
         .divContain {
-            width: 380px;
-            height: 66px;
-            margin: 0 0 10px 0;
+            width: 340px;
+            height: 55px;
+            margin: 0 0 8px 0;
             float: left;
         }
         .imgContain {
-            width: 110px;
-            height: 66px;
+            width: 128px;
+            height: 55px;
         }
     </style>
 
@@ -50,20 +50,20 @@
 </head>
 <body class="gray-bg">
 
-<div class="wrapper wrapper-content animated fadeInRight" style="display: flex;background-color: #89898905;">
-    <div style="display: flex;width: 400px;margin: auto;margin-top: 5px;">
-        <div style="width: 380px;margin: auto;">
+<div id="dataDiv" class="wrapper wrapper-content animated fadeInRight" style="display: flex;background-color: #89898905;display: none;">
+    <div style="display: flex;width: 350px;margin: auto;margin-top: 5px;">
+        <div style="width: 340px;margin: auto;">
             <div th:each="item,itemStat:${attachList}">
                 <div class="divContain" th:onclick="readAttach([[${item.id}]])">
-                    <div style="float: left;height: 100%;width: 270px;position: relative;background-color: #8989890f;">
-                        <div style="height: 50px;vertical-align: middle;display: table-cell;">
-                            <p style="margin: 0 0 0 5px;font-size: 18px;font-family: 黑体;">
+                    <div style="float: left;height: 100%;width: 212px;position: relative;background-color: #8989890f;">
+                        <div style="height: 43px;vertical-align: middle;display: table-cell;">
+                            <p style="margin: 0 0 0 5px;font-size: 14px;font-family: 思源黑体 CN;">
                                 [[${item.remark}]]
                             </p>
                         </div>
-                        <div style="height: 16px;">
-                            <p style="margin: 0 0 1px 5px;position: absolute;bottom: 0px;font-size: 10px;font-family: 黑体;">
-                                [[${#dates.format(item.updateTime, 'yyyy-MM-dd HH:mm:ss')}]]   [[${item.author}]]
+                        <div style="height: 12px;">
+                            <p style="margin: 0 0 1px 5px;position: absolute;bottom: 0px;font-size: 9px;font-family: 思源黑体 CN;color: grey;">
+                                [[${#dates.format(item.updateTime, 'yyyy-MM-dd HH:mm')}]]   [[${item.author}]]
                             </p>
                         </div>
                     </div>
@@ -83,9 +83,15 @@
 
 <script type="text/javascript" th:inline="javascript">
     $(function () {
-        var attachList=[[${attachList}]];
-        if (attachList.length == 0) {
-            $.modal.msgError("本刊暂时没有任何期刊");
+        if (dd.env.platform=="notInDingTalk") {
+            alert("请用钉钉打开！");
+            return;
+        } else {
+            $('#dataDiv').show();
+            var attachList=[[${attachList}]];
+            if (attachList.length == 0) {
+                $.modal.msgError("本刊暂时没有任何期刊");
+            }
         }
     })
 
