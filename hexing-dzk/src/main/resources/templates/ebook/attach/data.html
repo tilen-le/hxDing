@@ -91,14 +91,28 @@
 						sortable: true
 					},
 					{
+						title: '封面附件',
+						align: 'center',
+						formatter: function (value, row, index) {
+							return coverTools(row);
+						}
+					},
+					{
 						field: 'remark',
 						title: '简介',
+						width: '15',
+						widthUnit: '%',
 						formatter: function(value, row, index) {
 							return $.table.tooltip(value, 20, 'open');
 						}
 					},
 					{
-						title: '附件',
+						field: 'author',
+						title: '作者',
+						sortable: true
+					},
+					{
+						title: '内容附件',
 						align: 'center',
 						formatter: function (value, row, index) {
 							return attachTools(row);
@@ -153,13 +167,16 @@
 		}
 		function attachTools(row) {
 			if (row.attachUrl != null) {
-				debugger
 				return '<a onclick="downloadAttach(\'' + row.attachUrl +'\')">'+ row.attachName +'</a> ';
 			}
 		}
 		function downloadAttach(url) {
-			debugger
 			window.location.href = ctx + "common/download2?fileName=" + encodeURI(url) + "&delete=" + false;
+		}
+		function coverTools(row) {
+			if (row.coverName != null) {
+				return '<a onclick="downloadAttach(\'' + row.coverUrl +'\')">'+ row.coverName +'</a> ';
+			}
 		}
 
 		/* 停用 */
@@ -176,25 +193,51 @@
 			})
 		}
 		function avatar(id) {
-			var url = prefix + '/attachCover?id=' + id;
+			var url = prefix + '/uploadAttachCover?id=' + id;
 			layer.open({
-				type: 2,
-				area: [($(window).width() - 400)+ 'px', $(window).height() + 'px'],
+				type: 1,
+				area: [500 + 'px', 300 + 'px'],
 				fix: false,
 				//不固定
 				maxmin: true,
 				shade: 0.3,
-				title: "上传封面",
-				content: url,
-				btn: ['确定', '关闭'],
+				title: '上传封面',
+				content: $('#importTpl').html(),
+				btn: ['<i class="fa fa-check"></i> 导入', '<i class="fa fa-remove"></i> 取消'],
 				// 弹层外区域关闭
 				shadeClose: true,
-				yes: function(index, layero) {
-					var iframeWin = layero.find('iframe')[0];
-					iframeWin.contentWindow.submitHandler(id);
-				},
-				cancel: function(index) {
-					return true;
+				btn1: function(index, layero){
+					var file = layero.find('#file').val();
+					if (file == '' || (!$.common.endWith(file, '.jpg') && !$.common.endWith(file, '.png'))){
+						$.modal.msgWarning("请选择后缀为 “jpg”或“png”的文件。");
+						return false;
+					}
+					var index = layer.load(2, {shade: false});
+					$.modal.disable();
+					var formData = new FormData(layero.find('form')[0]);
+					$.ajax({
+						url: url,
+						data: formData,
+						cache: false,
+						contentType: false,
+						processData: false,
+						type: 'post',
+						success: function (result) {
+							if (result.code == web_status.SUCCESS) {
+								$.modal.closeAll();
+								$.modal.alertSuccess(result.msg);
+								$.table.refresh();
+							} else if (result.code == web_status.WARNING) {
+								layer.close(index);
+								$.modal.enable();
+								$.modal.alertWarning(result.msg)
+							} else {
+								layer.close(index);
+								$.modal.enable();
+								$.modal.alertError(result.msg);
+							}
+						}
+					});
 				}
 			});
 		}

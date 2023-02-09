@@ -28,7 +28,7 @@ import java.util.List;
 @RequestMapping("/ebook/manage")
 public class EleBookController extends BaseController {
 
-    private String defaultUrl = "/profile/default/cover/xx.png";
+    private String defaultUrl = "/profile/default/cover/xxxx.png";
 
     private String prefix = "ebook/manage";
 
@@ -132,17 +132,6 @@ public class EleBookController extends BaseController {
         }
     }
 
-    @GetMapping("/bookCover")
-    public String avatar(ModelMap map, HttpServletRequest request)
-    {
-        EleBook eleBook = bookService.getById(Long.parseLong(request.getParameter("id")));
-        if (StringUtils.isBlank(eleBook.getCoverUrl())) {
-            eleBook.setCoverUrl(defaultUrl);
-        }
-        map.put("eleBook", eleBook);
-        return prefix + "/bookCover";
-    }
-
     @PostMapping("/uploadBookCover")
     @ResponseBody
     public AjaxResult updateAvatar(@RequestParam("file") MultipartFile file, @RequestParam("id") String id) {
@@ -152,6 +141,7 @@ public class EleBookController extends BaseController {
                 EleBook eleBook = new EleBook();
                 eleBook.setId(Integer.parseInt(id));
                 eleBook.setCoverUrl(url);
+                eleBook.setCoverName(file.getOriginalFilename());
                 bookService.updateEleBook(eleBook);
                 return success();
             }

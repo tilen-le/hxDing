@@ -28,7 +28,7 @@ import java.util.List;
 @RequestMapping("/ebook/attach")
 public class BookAttachController extends BaseController {
 
-    private String defaultUrl = "/profile/default/cover/xx.png";
+    private String defaultUrl = "/profile/default/cover/cccc.png";
 
     private String prefix = "ebook/attach";
 
@@ -68,8 +68,7 @@ public class BookAttachController extends BaseController {
     }
 
     @GetMapping("/add/{bookId}")
-    public String add(@PathVariable("bookId") Long bookId, ModelMap mmap)
-    {
+    public String add(@PathVariable("bookId") Long bookId, ModelMap mmap) {
         mmap.put("bookId", bookId);
         return prefix + "/add";
     }
@@ -87,8 +86,7 @@ public class BookAttachController extends BaseController {
     }
 
     @GetMapping("/edit/{id}")
-    public String edit(@PathVariable("id") Long id, ModelMap mmap)
-    {
+    public String edit(@PathVariable("id") Long id, ModelMap mmap) {
         mmap.put("attach", bookService.getAttachById(id));
         return prefix + "/edit";
     }
@@ -99,21 +97,10 @@ public class BookAttachController extends BaseController {
     @Log(title = "期刊管理", businessType = BusinessType.UPDATE)
     @PostMapping("/edit")
     @ResponseBody
-    public AjaxResult editSave(BookAttach bookAttach)
-    {
+    public AjaxResult editSave(BookAttach bookAttach) {
         return toAjax(bookService.updateBookAttach(bookAttach));
     }
 
-    @GetMapping("/attachCover")
-    public String avatar(ModelMap map, HttpServletRequest request)
-    {
-        BookAttach bookAttach = bookService.getAttachById(Long.parseLong(request.getParameter("id")));
-        if (StringUtils.isBlank(bookAttach.getCoverUrl())) {
-            bookAttach.setCoverUrl(defaultUrl);
-        }
-        map.put("attach", bookAttach);
-        return prefix + "/attachCover";
-    }
 
     @PostMapping("/uploadAttachCover")
     @ResponseBody
@@ -124,6 +111,7 @@ public class BookAttachController extends BaseController {
                 BookAttach bookAttach = new BookAttach();
                 bookAttach.setId(Integer.parseInt(id));
                 bookAttach.setCoverUrl(url);
+                bookAttach.setCoverName(file.getOriginalFilename());
                 bookService.updateBookAttach(bookAttach);
                 return success();
             }
@@ -156,6 +144,7 @@ public class BookAttachController extends BaseController {
 
     @GetMapping("/jump/detail")
     public String jump(HttpServletRequest request, ModelMap mmap) {
+        String from = request.getParameter("from");
         String status = request.getParameter("status");
         String id = request.getParameter("id");
         BookAttach attach = new BookAttach();
@@ -168,20 +157,24 @@ public class BookAttachController extends BaseController {
             }
         }
         mmap.put("attachList", attachList);
-        return prefix + "/dzk_pc_info";
-/*        if ("pc".equals(type)){
-            return prefix+"/dzk_pc_info";
-        }else {
-            return prefix+"/dzk_iphone_info";
-        }*/
+        if ("pc".equals(from)) {
+            return prefix + "/dzk_pc_info";
+        } else {
+            return prefix + "/dzk_iphone_info";
+        }
     }
 
     @GetMapping("/readAttach")
     public String readAttach(HttpServletRequest request, ModelMap mmap) {
         String id = request.getParameter("id");
+        String from = request.getParameter("from");
         BookAttach attach = bookService.getAttachById(Long.parseLong(id));
         mmap.put("attach", attach);
-        return prefix + "/attach";
+        if ("pc".equals(from)) {
+            return prefix + "/attach_pc";
+        } else {
+            return prefix + "/attach_phone";
+        }
     }
 
 }

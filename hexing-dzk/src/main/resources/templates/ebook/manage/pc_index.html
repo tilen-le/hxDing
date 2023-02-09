@@ -30,11 +30,15 @@
     <!--[if IE]>
     <![endif]-->
     <style type="text/css">
-        .ibox {
-            height: auto !important;
+        .divContain {
+            width: 195px;
+            height: 348px;
+            margin: 0 10px 35px 0;
+            float: left;
         }
-        .ibox-content{
-            padding: 0px !important;
+        .imgContain {
+            width: 195px;
+            height: 348px;
         }
     </style>
 
@@ -46,54 +50,20 @@
 </head>
 <body class="gray-bg">
 
-<div class="wrapper wrapper-content animated fadeInRight">
-    <div class="row">
-        <div class="col-xs-3">
-            <div th:each="item,itemStat:${bookList}">
-                <div th:if="${itemStat.index % 4 == 0}" class="ibox" th:onclick="goAttachList([[${item.id}]])">
-                    <div class="ibox-content" >
-                        <div class="row">
-                            <img class="col-xs-12" th:src="@{${item.coverUrl}}" >
-                        </div>
-                    </div>
+<div class="wrapper wrapper-content animated fadeInRight" style="display: flex;background-color: #89898905;">
+<div style="display: flex;width: 1000px;margin: auto;margin-top: 10px;">
+    <div style="width: 820px;margin: auto;">
+        <div th:each="item,itemStat:${bookList}">
+            <div class="divContain" th:onclick="goAttachList([[${item.id}]])">
+                <div>
+                    <img class="imgContain" th:src="@{${item.coverUrl}}">
                 </div>
             </div>
         </div>
-        <div class="col-xs-3">
-            <div th:each="item,itemStat:${bookList}">
-                <div th:if="${itemStat.index % 4 == 1}" class="ibox" th:onclick="goAttachList([[${item.id}]])">
-                    <div class="ibox-content" >
-                        <div class="row">
-                            <img class="col-xs-12" th:src="@{${item.coverUrl}}" >
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xs-3">
-            <div th:each="item,itemStat:${bookList}">
-                <div th:if="${itemStat.index % 4 == 2}" class="ibox" th:onclick="goAttachList([[${item.id}]])">
-                    <div class="ibox-content" >
-                        <div class="row">
-                            <img class="col-xs-12" th:src="@{${item.coverUrl}}" >
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xs-3">
-            <div th:each="item,itemStat:${bookList}">
-                <div th:if="${itemStat.index % 4 == 2}" class="ibox" th:onclick="goAttachList([[${item.id}]])">
-                    <div class="ibox-content" >
-                        <div class="row">
-                            <img class="col-xs-12" th:src="@{${item.coverUrl}}" >
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
     </div>
+</div>
+
+
 </div>
 
 
@@ -108,7 +78,7 @@
     })
 
     function goAttachList(id) {
-        window.location.href = '/dzk/ebook/attach/jump/detail?id=' + id + "&status=1";
+        window.location.href = '/dzk/ebook/attach/jump/detail?id=' + id + "&status=1&from=pc";
     }
 
 </script>

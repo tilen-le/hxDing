@@ -11,6 +11,8 @@ public class BookAttach extends BaseEntity {
 
     private String name;
 
+    private String author;
+
     private long bookId;
 
     private String attachUrl;
@@ -18,6 +20,8 @@ public class BookAttach extends BaseEntity {
     private String attachName;
 
     private String coverUrl;
+
+    private String coverName;
 
     private String status;
 
@@ -87,15 +91,33 @@ public class BookAttach extends BaseEntity {
         this.attachName = attachName;
     }
 
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public String getCoverName() {
+        return coverName;
+    }
+
+    public void setCoverName(String coverName) {
+        this.coverName = coverName;
+    }
+
     @Override
     public String toString() {
         return "BookAttach{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", author='" + author + '\'' +
                 ", bookId=" + bookId +
                 ", attachUrl='" + attachUrl + '\'' +
                 ", attachName='" + attachName + '\'' +
                 ", coverUrl='" + coverUrl + '\'' +
+                ", coverName='" + coverName + '\'' +
                 ", status='" + status + '\'' +
                 ", sorted=" + sorted +
                 '}';

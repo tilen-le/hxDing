@@ -30,8 +30,15 @@
     <!--[if IE]>
     <![endif]-->
     <style type="text/css">
-        .ibox {
-            height: auto !important;
+        .divContain {
+            width: 840px;
+            height: 150px;
+            margin: 0 0 25px 0;
+            float: left;
+        }
+        .imgContain {
+            width: 250px;
+            height: 150px;
         }
     </style>
 
@@ -40,28 +47,33 @@
     <script type="text/javascript" th:src="@{/dzk/jquery.qrcode.min.js}"></script>
     <script type="text/javascript" th:src="@{/dzk/modernizr.2.5.3.min.js}"></script>
     <script th:src="@{/js/imagesloaded.pkgd.min.js}"></script>
-   </head>
+</head>
 <body class="gray-bg">
 
-<div class="wrapper wrapper-content animated fadeInRight">
-    <div class="row">
-        <div class="col-xs-12">
-            <div th:each="item,index:${attachList}">
-                <div class="ibox" th:onclick="readAttach([[${item.id}]])">
-                    <div class="ibox-content" >
-                        <div class="row">
-                            <div class="col-xs-8">
-                                <h5 class="font-bold">[[${item.name}]]</h5>
-                                <p>
-                                    [[${item.remark}]]
-                                </p>
-                            </div>
-<!--                            <div class="col-xs-2" />-->
-                            <img class="col-xs-4" th:src="@{${item.coverUrl}}" >
+<div class="wrapper wrapper-content animated fadeInRight" style="display: flex;background-color: #89898905;">
+    <div style="display: flex;width: 1000px;margin: auto;margin-top: 10px;">
+        <div style="width: 840px;margin: auto;">
+            <div th:each="item,itemStat:${attachList}">
+                <div class="divContain" th:onclick="readAttach([[${item.id}]])">
+                    <div style="float: left;height: 100%;width: 590px;position: relative;background-color: #8989890f;">
+                        <div style="height: 110px;vertical-align: middle;display: table-cell;">
+                            <p style="margin: 0 0 0 10px;font-size: 36px;font-family: 黑体;">
+                                [[${item.remark}]]
+                            </p>
+                        </div>
+                        <div style="height: 40px;">
+                            <p style="margin-left: 10px;position: absolute;bottom: 0px;font-size: 24px;font-family: 黑体;">
+                                [[${#dates.format(item.updateTime, 'yyyy-MM-dd HH:mm:ss')}]]   [[${item.author}]]
+                            </p>
                         </div>
                     </div>
+                    <div style="float: right;">
+                        <img class="imgContain" th:src="@{${item.coverUrl}}">
+                    </div>
+
                 </div>
             </div>
+
         </div>
     </div>
 </div>
@@ -78,8 +90,7 @@
     })
 
     function readAttach(id) {
-        debugger
-        window.location.href = '/dzk/ebook/attach/readAttach?id=' + id;
+        window.location.href = '/dzk/ebook/attach/readAttach?id=' + id + "&from=pc";;
     }
 
 </script>

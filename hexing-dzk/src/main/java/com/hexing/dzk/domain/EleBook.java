@@ -13,6 +13,8 @@ public class EleBook extends BaseEntity {
 
     private String coverUrl;
 
+    private String coverName;
+
     private String status;
 
     private int sorted;
@@ -57,12 +59,21 @@ public class EleBook extends BaseEntity {
         this.coverUrl = coverUrl;
     }
 
+    public String getCoverName() {
+        return coverName;
+    }
+
+    public void setCoverName(String coverName) {
+        this.coverName = coverName;
+    }
+
     @Override
     public String toString() {
         return "EleBook{" +
                 "id=" + id +
                 ", bookName='" + bookName + '\'' +
                 ", coverUrl='" + coverUrl + '\'' +
+                ", coverName='" + coverName + '\'' +
                 ", status='" + status + '\'' +
                 ", sorted=" + sorted +
                 '}';
