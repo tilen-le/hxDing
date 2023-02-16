@@ -62,6 +62,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="coverName != null and coverName != ''">cover_name = #{coverName},</if>
 			<if test="bookName != null and bookName != ''">book_name = #{bookName},</if>
 			<if test="status != null and status != ''">status = #{status},</if>
+			<if test="sorted != null and sorted != ''">sorted = #{sorted},</if>
 			<if test="remark != null">remark = #{remark},</if>
 			update_time = sysdate()
 		</set>
@@ -128,6 +129,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="attachName != null and attachName != ''">attach_name = #{attachName},</if>
 			<if test="attachUrl != null and attachUrl != ''">attach_url = #{attachUrl},</if>
 			<if test="status != null and status != ''">status = #{status},</if>
+			<if test="sorted != null and sorted != ''">sorted = #{sorted},</if>
 			<if test="remark != null">remark = #{remark},</if>
 			update_time = sysdate()
 		</set>
