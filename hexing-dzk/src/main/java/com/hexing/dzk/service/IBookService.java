@@ -1,6 +1,7 @@
 package com.hexing.dzk.service;
 
 import com.hexing.dzk.domain.BookAttach;
+import com.hexing.dzk.domain.BookPraise;
 import com.hexing.dzk.domain.EleBook;
 
 import java.util.List;
@@ -51,5 +52,13 @@ public interface IBookService {
     BookAttach getAttachById(Long attachId);
 
     int updateBookAttach(BookAttach bookAttach);
+
+    int countBookPraise(Integer bookId);
+
+    Boolean praiseMark(Long userId,Integer bookId);
+
+    int addBookPraise(BookPraise bookPraise);
+
+    int deleteBookPraise(Long userId,Integer bookId);
 
 }

@@ -2,7 +2,9 @@ package com.hexing.dzk.service.impl;
 
 import com.hexing.common.core.text.Convert;
 import com.hexing.dzk.domain.BookAttach;
+import com.hexing.dzk.domain.BookPraise;
 import com.hexing.dzk.domain.EleBook;
+import com.hexing.dzk.mapper.BookPraiseMapper;
 import com.hexing.dzk.mapper.EleBookMapper;
 import com.hexing.dzk.service.IBookService;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,8 @@ public class BookServiceImpl implements IBookService {
     @Resource
     private EleBookMapper eleBookMapper;
 
+    @Resource
+    private BookPraiseMapper bookPraiseMapper;
     @Override
     public List<EleBook> getBookList(EleBook eleBook) {
         //获取列表
@@ -88,6 +92,30 @@ public class BookServiceImpl implements IBookService {
     @Override
     public int updateBookAttach(BookAttach bookAttach) {
         return eleBookMapper.updateAttach(bookAttach);
+    }
+
+    @Override
+    public int countBookPraise(Integer bookId) {
+        return bookPraiseMapper.countByBookId(bookId);
+    }
+
+    @Override
+    public Boolean praiseMark(Long userId, Integer bookId) {
+        List<BookPraise> list = bookPraiseMapper.selectByUserIdAndBookId(userId,bookId);
+        if (list.size() == 0){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public int addBookPraise(BookPraise bookPraise) {
+        return bookPraiseMapper.insert(bookPraise);
+    }
+
+    @Override
+    public int deleteBookPraise(Long userId, Integer bookId) {
+        return bookPraiseMapper.deleteByBookIdAndUserId(userId,bookId);
     }
 
 

@@ -34,6 +34,21 @@
             width: 840px;
             pointer-events:none;
         }
+        /* 内容 */
+        .content {
+            border: 2px solid #eae2e1; /* 边框 */
+            padding: 13px 16px; /* 内边距 */
+            border-radius: 5px; /* 边框圆角 */
+            display: flex; /* 弹性盒模型 */
+            cursor: pointer; /* 鼠标样式 */
+            font-size: 15px; /* 字体大小 */
+            font-family: sans-serif;
+            background-image: url("../../img/witer.png");
+        }
+        .content.heart-active { /* 切换后样式 */
+            border-color: #cb455d; /* 修改边框颜色 */
+            background: #fbd0d8; /*  修改背景颜色*/
+        }
     </style>
 
     <script type="text/javascript" th:src="@{/dzk/jquery.min.1.7.js}"></script>
@@ -48,6 +63,8 @@
     <div style="display: flex;width: 1000px;margin: auto;margin-top: 5px;">
         <div style="width: 840px;margin: auto;">
             <img class="imgContain" th:src="@{${attach.attachUrl}}">
+            <button  class="content"  >点赞</button>
+            <span id="num" th:text="${num}"></span>
         </div>
     </div>
 </div>
@@ -59,18 +76,63 @@
     </script>
     <script type="text/javascript" th:inline="javascript">
         $(function() {
-            if (dd.env.platform=="notInDingTalk") {
-                alert("请用钉钉打开！");
-                return;
-            } else {
+            // if (dd.env.platform=="notInDingTalk") {
+            //     alert("请用钉钉打开！");
+            //     return;
+            // } else {
                 $('#dataDiv').show();
                 var attach = [[${attach}]];
                 if (attach == null || attach.attachUrl == null) {
                     $.modal.msgError("本期刊没有上传内容");
                 }
-            }
-        })
+            // }
+                var show = [[${praiseMark}]];
+                if (!show){
+                    $('.content').toggleClass('heart-active')
+                }
 
+        })
+        /**
+         * 点赞数
+         * @type {number}
+         */
+        $(document).ready(function() {
+            var flag = [[${praiseMark}]]
+            // 根据类名添加点击事件
+            $('.content').click(function() {
+                var n=document.getElementById("num");
+                // 根据类切换类名
+                $(this).toggleClass('heart-active')
+                if (flag){
+                    n.innerHTML=parseInt(n.innerHTML)+1;
+                    flag = false;
+                    thumbsUp(flag)
+                }else {
+                    n.innerHTML=parseInt(n.innerHTML)-1;
+                    flag = true;
+                    thumbsUp(flag)
+                }
+            })
+        });
+        function thumbsUp(flag) {
+            $.ajax({
+                type: "Get",
+                cache: false,
+                url: "/dzk/ebook/attach/thumbsUp",
+                data: {"flag":flag},
+                dataType: "json",
+                success: function (result) {
+                    if (result.code==0){
+                        console.log(result.msg)
+                    }else {
+                        console.log(result.msg)
+                    }
+                },
+                error: function (result) {
+                    console.log(result.msg)
+                }
+            });
+        }
     </script>
     </body>
 </html>

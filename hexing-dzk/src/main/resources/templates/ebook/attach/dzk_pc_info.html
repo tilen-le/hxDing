@@ -51,7 +51,6 @@
 <body class="gray-bg">
 
 <div id="dataDiv" class="wrapper wrapper-content animated fadeInRight" style="display: flex;background-color: #89898905;display: none;">
-
     <div style="display: flex;width: 1000px;margin: auto;margin-top: 10px;">
         <div style="width: 900px;margin: auto;">
             <div th:each="item,itemStat:${attachList}">
@@ -83,20 +82,39 @@
 
 <script type="text/javascript" th:inline="javascript">
     $(function() {
-        if (dd.env.platform=="notInDingTalk") {
-            alert("请用钉钉打开！");
-            return;
-        } else {
+        // if (dd.env.platform=="notInDingTalk") {
+        //     alert("请用钉钉打开！");
+        //     return;
+        // } else {
             $('#dataDiv').show();
             var attachList=[[${attachList}]];
             if (attachList.length == 0) {
                 $.modal.msgError("本刊暂时没有任何期刊");
             }
-        }
+        // }
+
+        var code = ''
+        /**
+         * 钉钉回调函数
+         */
+        dd.ready(function() {
+            // dd.ready参数为回调函数，在环境准备就绪时触发，jsapi的调用需要保证在该回调函数触发后调用，否则无效。
+            dd.runtime.permission.requestAuthCode({
+                corpId: "ding389cf0d9a2e1cc2f",//线上
+                // corpId: "dingdab143b5a957258df2c783f7214b6d69",//测试
+                onSuccess: function(result) {
+                    this.code=result.code;
+                    // addAccessRecords(data);
+                },
+                onFail : function(err) {
+                    // $.modal.msgError("请在钉钉中打开该页面");
+                }
+            });
+        });
     })
 
     function readAttach(id) {
-        window.location.href = '/dzk/ebook/attach/readAttach?id=' + id + "&from=pc";
+        window.location.href = '/dzk/ebook/attach/readAttach?id=' + id + "&from=pc"+"&code="+this.code;
     }
 
 /*    function backBook() {

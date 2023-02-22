@@ -1,5 +1,6 @@
 package com.hexing.dzk.controller;
 
+import com.alibaba.druid.support.json.JSONUtils;
 import com.hexing.common.annotation.Log;
 import com.hexing.common.config.HeXingConfig;
 import com.hexing.common.core.controller.BaseController;
@@ -9,7 +10,10 @@ import com.hexing.common.enums.BusinessType;
 import com.hexing.common.utils.StringUtils;
 import com.hexing.common.utils.file.FileUploadUtils;
 import com.hexing.dzk.domain.BookAttach;
+import com.hexing.dzk.domain.BookPraise;
+import com.hexing.dzk.domain.EleBook;
 import com.hexing.dzk.service.IBookService;
+import com.hexing.dzk.tool.GetUserMsg;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -39,6 +44,9 @@ public class BookAttachController extends BaseController {
 
     @Resource
     private IBookService bookService;
+
+    @Resource
+    private GetUserMsg getUserMsg;
 
     @PostMapping("/list")
     @ResponseBody
@@ -177,13 +185,54 @@ public class BookAttachController extends BaseController {
     public String readAttach(HttpServletRequest request, ModelMap mmap) {
         String id = request.getParameter("id");
         String from = request.getParameter("from");
+        String code = request.getParameter("code");
         BookAttach attach = bookService.getAttachById(Long.parseLong(id));
+
+        int Num = 0;
+        Boolean praiseMark = true;
+        String userId = String.valueOf(80015801);
+        try {
+            HttpSession session = request.getSession();
+            userId = (String) session.getAttribute("userId");
+            if (userId == null){
+//                String key = "dingdg5xw8bs25xrhc3x";
+//                String secret = "9kJHco5VvVDQ9bmLojiPOpLNQW_B_3vwFtc4eUIzh0lj8rw1H1cpz_RrabnUf9T_";
+//                userId = getUserMsg.getUserid(key,secret,code);
+                userId = String.valueOf(80015801);
+                session.setAttribute("userId",userId);
+                session.setAttribute("bookId",id);
+            }
+            Num = bookService.countBookPraise(Integer.parseInt(id));
+            praiseMark = bookService.praiseMark(Long.valueOf(userId),Integer.parseInt(id));
+        } catch (NumberFormatException e) {
+            throw new RuntimeException(e);
+        }
+        mmap.put("num",Num);
+        mmap.put("praiseMark",praiseMark);
+
         mmap.put("attach", attach);
         if ("pc".equals(from)) {
             return prefix + "/attach_pc";
         } else {
             return prefix + "/attach_phone";
         }
+    }
+
+    @GetMapping("/thumbsUp")
+    @ResponseBody
+    public AjaxResult thumbsUp(HttpServletRequest request,Boolean flag) {
+        HttpSession session = request.getSession();
+        String bookId = (String) session.getAttribute("bookId");
+        String userId = (String) session.getAttribute("userId");
+        BookPraise bookPraise = new BookPraise();
+        bookPraise.setBookId(Integer.valueOf(bookId));
+        bookPraise.setUserId(Long.valueOf(userId));
+        if (!flag){
+            bookService.addBookPraise(bookPraise);
+        }else {
+            bookService.deleteBookPraise(Long.valueOf(userId),Integer.valueOf(bookId));
+        }
+        return AjaxResult.success("成功"+flag);
     }
 
 }

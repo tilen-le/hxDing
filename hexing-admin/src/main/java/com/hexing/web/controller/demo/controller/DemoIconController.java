@@ -25,7 +25,7 @@ public class DemoIconController
     }
 
     /**
-     * Glyphicons图标
+     * Glyph图标
      */
     @GetMapping("/glyphicons")
     public String glyphicons()
