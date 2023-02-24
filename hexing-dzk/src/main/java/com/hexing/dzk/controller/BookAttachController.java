@@ -17,6 +17,7 @@ import com.hexing.dzk.domain.BookPraise;
 import com.hexing.dzk.domain.EleBook;
 import com.hexing.dzk.service.IBookService;
 import com.hexing.dzk.tool.GetUserMsg;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -50,8 +51,12 @@ public class BookAttachController extends BaseController {
     @Resource
     private IBookService bookService;
 
-    @Resource
-    private GetUserMsg getUserMsg;
+
+    @Value("token.appkey")
+    private String key;
+
+    @Value("token.appsecret")
+    private String appsecret;
 
     @PostMapping("/list")
     @ResponseBody
@@ -191,32 +196,26 @@ public class BookAttachController extends BaseController {
         String id = request.getParameter("id");
         String from = request.getParameter("from");
         String code = request.getParameter("code");
+        //查询期刊
         BookAttach attach = bookService.getAttachById(Long.parseLong(id));
-//        String key = "dingdg5xw8bs25xrhc3x";
-//        String secret = "9kJHco5VvVDQ9bmLojiPOpLNQW_B_3vwFtc4eUIzh0lj8rw1H1cpz_RrabnUf9T_";
-//        HashMap<String,String> map = getUserMsg.getUserid(key,secret,code);
-        int Num = 0;
-        Boolean praiseMark = true;
-        String userId = String.valueOf(80015801);
-//        String userId = map.get("userId");
-        try {
-            HttpSession session = request.getSession();
-            userId = (String) session.getAttribute("userId");
-            if (userId == null){
-
-                userId = String.valueOf(80015801);
-                session.setAttribute("userId",userId);
-                session.setAttribute("bookId",id);
-            }
-            Num = bookService.countBookPraise(Integer.parseInt(id));
-            praiseMark = bookService.praiseMark(Long.valueOf(userId),Integer.parseInt(id));
-
-        } catch (NumberFormatException e) {
-            throw new RuntimeException(e);
+        //查询期刊点赞数量
+        int Num = bookService.countBookPraise(Integer.parseInt(id));
+        //判断session中是否有用户信息
+        HttpSession session = request.getSession();
+        String userId= (String) session.getAttribute("userId");
+        String name= (String) session.getAttribute("name");
+        if (StringUtils.isEmpty(userId) || StringUtils.isEmpty(name)){
+            //如果session中没有 则调钉钉接口获取用户信息
+            HashMap<String,String> map = GetUserMsg.getUserid(key,appsecret,code);
+            //把用户信息放到session中后减少钉钉接口调用
+            session.setAttribute("userId",map.get("userId"));
+            session.setAttribute("name",map.get("name"));
         }
+        //用户是否为当前期刊点赞标识
+        Boolean praiseMark = bookService.praiseMark(Long.valueOf(userId), Integer.parseInt(id));
+        //返回数据
         mmap.put("num",Num);
         mmap.put("praiseMark",praiseMark);
-
         mmap.put("attach", attach);
         if ("pc".equals(from)) {
             return prefix + "/attach_pc";
