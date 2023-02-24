@@ -2,8 +2,10 @@ package com.hexing.dzk.service.impl;
 
 import com.hexing.common.core.text.Convert;
 import com.hexing.dzk.domain.BookAttach;
+import com.hexing.dzk.domain.BookComment;
 import com.hexing.dzk.domain.BookPraise;
 import com.hexing.dzk.domain.EleBook;
+import com.hexing.dzk.mapper.BookCommentMapper;
 import com.hexing.dzk.mapper.BookPraiseMapper;
 import com.hexing.dzk.mapper.EleBookMapper;
 import com.hexing.dzk.service.IBookService;
@@ -23,6 +25,10 @@ public class BookServiceImpl implements IBookService {
 
     @Resource
     private BookPraiseMapper bookPraiseMapper;
+
+    @Resource
+    private BookCommentMapper bookCommentMapper;
+
     @Override
     public List<EleBook> getBookList(EleBook eleBook) {
         //获取列表
@@ -116,6 +122,19 @@ public class BookServiceImpl implements IBookService {
     @Override
     public int deleteBookPraise(Long userId, Integer bookId) {
         return bookPraiseMapper.deleteByBookIdAndUserId(userId,bookId);
+    }
+
+    @Override
+    public int addBookComment(BookComment bookComment) {
+        return bookCommentMapper.insert(bookComment);
+    }
+
+    @Override
+    public List<BookComment> getAllComment(Integer bookID) {
+        List<BookComment> list = bookCommentMapper.selectAllByBookId(bookID);
+        String s = list.toString();
+        System.out.println("s = " + s);
+        return list;
     }
 
 

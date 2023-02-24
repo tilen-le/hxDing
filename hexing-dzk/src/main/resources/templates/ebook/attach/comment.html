@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+  <th:block th:include="include :: header('评论列表')" />
+</head>
+<body class="gray-bg">
+<div class="container-div">
+  <div class="row">
+    <div class="col-sm-12 select-table table-striped">
+      <table id="bootstrap-table"></table>
+    </div>
+  </div>
+</div>
+<th:block th:include="include :: footer" />
+<script th:inline="javascript">
+  var editFlag = true;
+  var removeFlag = true;
+  var datas = [[${@dict.getType('sys_normal_disable')}]];
+  var prefix = ctx + "ebook/attach";
+  var id = [[${bookId}]]
+  $(function() {
+    var options = {
+      url: prefix + "/commentList"+"?id="+id,
+      columns: [{
+        checkbox: true
+      },
+        {
+          field: 'id',
+          title: 'id'
+        },
+        {
+          field: 'bookId',
+          title: '电子刊id',
+          sortable: true
+        },
+        {
+          field: 'userId',
+          title: '用户名',
+          sortable: true
+        },
+        {
+          field: 'comment',
+          title: '评论内容',
+          sortable: true
+        },
+        {
+          visible: editFlag == 'hidden' ? false : true,
+          title: '状态',
+          align: 'center',
+          sortable: true,
+          formatter: function (value, row, index) {
+            return statusTools(row);
+          }
+        },
+        {
+          field: 'sorted',
+          title: '显示排序',
+          sortable: true
+        },
+        {
+          field: 'createTime',
+          title: '创建时间',
+          sortable: true
+        },
+        {
+          title: '操作',
+          align: 'center',
+          formatter: function(value, row, index) {
+            var actions = [];
+            actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+            return actions.join('');
+          }
+        }]
+    };
+    $.table.init(options);
+  });
+
+  function statusTools(row) {
+    if (row.status == 0) {
+      return '<i class=\"fa fa-toggle-off text-info fa-2x\" onclick="enable(\'' + row.id + '\')"></i> ';
+    } else {
+      return '<i class=\"fa fa-toggle-on text-info fa-2x\" onclick="disable(\'' + row.id + '\')"></i> ';
+    }
+  }
+
+  /* 停用 */
+  function disable(id) {
+    $.modal.confirm("确认要停用该电子刊吗？", function() {
+      $.operate.post(prefix + "/changeStatus", { "id": id, "status": 0 });
+    })
+  }
+
+  /* 启用 */
+  function enable(id) {
+    $.modal.confirm("确认要启用该电子刊吗？", function() {
+      $.operate.post(prefix + "/changeStatus", { "id": id, "status": 1 });
+    })
+  }
+
+</script>
+</body>
+</html>

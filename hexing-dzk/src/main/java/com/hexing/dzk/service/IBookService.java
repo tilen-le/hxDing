@@ -1,6 +1,7 @@
 package com.hexing.dzk.service;
 
 import com.hexing.dzk.domain.BookAttach;
+import com.hexing.dzk.domain.BookComment;
 import com.hexing.dzk.domain.BookPraise;
 import com.hexing.dzk.domain.EleBook;
 
@@ -60,5 +61,9 @@ public interface IBookService {
     int addBookPraise(BookPraise bookPraise);
 
     int deleteBookPraise(Long userId,Integer bookId);
+
+    int addBookComment(BookComment bookComment);
+
+    List<BookComment> getAllComment(Integer bookID);
 
 }

@@ -1,5 +1,6 @@
 package com.hexing.dzk.tool;
 
+import com.alibaba.fastjson.JSONObject;
 import com.dingtalk.api.DefaultDingTalkClient;
 import com.dingtalk.api.DingTalkClient;
 import com.dingtalk.api.request.OapiGettokenRequest;
@@ -8,10 +9,13 @@ import com.dingtalk.api.response.OapiGettokenResponse;
 import com.dingtalk.api.response.OapiUserGetuserinfoResponse;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
 public class GetUserMsg {
     //userid
-    public static String getUserid(String key, String secret, String code) {
+    public static HashMap<String,String> getUserid(String key, String secret, String code) {
         try {
             DefaultDingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/gettoken");
             OapiGettokenRequest request = new OapiGettokenRequest();
@@ -30,13 +34,19 @@ public class GetUserMsg {
             if (userid.startsWith("S")) {
                 userid = userid.substring(1);
             }
+            String body = response1.getBody();
+            JSONObject jsonObject = JSONObject.parseObject(body);
+            String name = jsonObject.getString("name");
+            HashMap<String,String> map = new HashMap<>();
+            map.put("userId",userid);
+            map.put("name",name);
 //            if ("070003405826144516".equals(userid)) {
 //                return "80007635";
 //            }
-            return userid;
+            return map;
         } catch (Exception e) {
             e.printStackTrace();
-            return e.getMessage();
+            return new HashMap<>();
         }
 //return "80007635";
     }

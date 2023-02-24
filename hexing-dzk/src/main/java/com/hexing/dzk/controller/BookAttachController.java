@@ -5,11 +5,14 @@ import com.hexing.common.annotation.Log;
 import com.hexing.common.config.HeXingConfig;
 import com.hexing.common.core.controller.BaseController;
 import com.hexing.common.core.domain.AjaxResult;
+import com.hexing.common.core.domain.entity.SysUser;
 import com.hexing.common.core.page.TableDataInfo;
 import com.hexing.common.enums.BusinessType;
+import com.hexing.common.utils.ShiroUtils;
 import com.hexing.common.utils.StringUtils;
 import com.hexing.common.utils.file.FileUploadUtils;
 import com.hexing.dzk.domain.BookAttach;
+import com.hexing.dzk.domain.BookComment;
 import com.hexing.dzk.domain.BookPraise;
 import com.hexing.dzk.domain.EleBook;
 import com.hexing.dzk.service.IBookService;
@@ -22,7 +25,9 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 电子刊
@@ -187,23 +192,25 @@ public class BookAttachController extends BaseController {
         String from = request.getParameter("from");
         String code = request.getParameter("code");
         BookAttach attach = bookService.getAttachById(Long.parseLong(id));
-
+//        String key = "dingdg5xw8bs25xrhc3x";
+//        String secret = "9kJHco5VvVDQ9bmLojiPOpLNQW_B_3vwFtc4eUIzh0lj8rw1H1cpz_RrabnUf9T_";
+//        HashMap<String,String> map = getUserMsg.getUserid(key,secret,code);
         int Num = 0;
         Boolean praiseMark = true;
         String userId = String.valueOf(80015801);
+//        String userId = map.get("userId");
         try {
             HttpSession session = request.getSession();
             userId = (String) session.getAttribute("userId");
             if (userId == null){
-//                String key = "dingdg5xw8bs25xrhc3x";
-//                String secret = "9kJHco5VvVDQ9bmLojiPOpLNQW_B_3vwFtc4eUIzh0lj8rw1H1cpz_RrabnUf9T_";
-//                userId = getUserMsg.getUserid(key,secret,code);
+
                 userId = String.valueOf(80015801);
                 session.setAttribute("userId",userId);
                 session.setAttribute("bookId",id);
             }
             Num = bookService.countBookPraise(Integer.parseInt(id));
             praiseMark = bookService.praiseMark(Long.valueOf(userId),Integer.parseInt(id));
+
         } catch (NumberFormatException e) {
             throw new RuntimeException(e);
         }
@@ -217,6 +224,22 @@ public class BookAttachController extends BaseController {
             return prefix + "/attach_phone";
         }
     }
+
+    @GetMapping("/comment/{id}")
+    public String comment(@PathVariable("id") Integer id, ModelMap mmap) {
+        mmap.put("bookId", id);
+        return "ebook/attach/comment";
+    }
+
+    @PostMapping("/commentList")
+    @ResponseBody
+    public TableDataInfo list(HttpServletRequest request) {
+        String bookId = request.getParameter("id");
+        startPage();
+        List<BookComment> list = bookService.getAllComment(Integer.valueOf(bookId));
+        return getDataTable(list);
+    }
+
 
     @GetMapping("/thumbsUp")
     @ResponseBody
@@ -233,6 +256,35 @@ public class BookAttachController extends BaseController {
             bookService.deleteBookPraise(Long.valueOf(userId),Integer.valueOf(bookId));
         }
         return AjaxResult.success("成功"+flag);
+    }
+
+    @GetMapping("/getAllComment")
+    @ResponseBody
+    public AjaxResult getAllComment( HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String bookId = (String) session.getAttribute("bookId");
+        List<BookComment> list = bookService.getAllComment(Integer.valueOf(bookId));
+        return AjaxResult.success("成功获取所有评论列表",list);
+    }
+
+    @PostMapping("/addComment")
+    @ResponseBody
+    public AjaxResult addComment(HttpServletRequest request,String comment){
+        HttpSession session = request.getSession();
+        String userId = (String) session.getAttribute("userId");
+        String bookId = (String) session.getAttribute("bookId");
+        BookComment bookComment = new BookComment();
+        bookComment.setBookId(Integer.valueOf(bookId));
+        bookComment.setUserId(Long.valueOf(userId));
+        bookComment.setComment(comment);
+        int n = 0;
+        try {
+            n = bookService.addBookComment(bookComment);
+            List<BookComment> list = bookService.getAllComment(Integer.valueOf(bookId));
+            return AjaxResult.success("成功添加"+n+"条评论",list);
+        } catch (NumberFormatException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

@@ -50,8 +50,8 @@
 		var removeFlag = true;
 		var datas = true;
 		var prefix = ctx + "ebook/attach";
-
 		$(function() {
+			debugger
 			var options = {
 				url: prefix + "/list",
 				createUrl: prefix + "/add/{id}",
@@ -136,6 +136,7 @@
 							actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="avatar(\'' + row.id + '\')"><i class="fa fa-upload"></i>上传封面</a> ');
 							actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
 							actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="attach(\'' + row.id + '\')"><i class="fa fa-upload"></i>上传内容</a> ');
+							actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="comment(\'' + row.id + '\')"><i class="fa fa-upload"></i>评论管理</a> ');
 							actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
 							return actions.join('');
 						}
@@ -290,6 +291,11 @@
 					});
 				}
 			});
+		}
+
+		function comment(id) {
+			var url = prefix + '/comment/' + id;
+			$.modal.openTab("评论列表", url);
 		}
 
 	</script>
