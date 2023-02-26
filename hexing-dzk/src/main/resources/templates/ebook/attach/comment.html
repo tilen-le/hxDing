@@ -21,6 +21,7 @@
   $(function() {
     var options = {
       url: prefix + "/commentList"+"?id="+id,
+      removeUrl: prefix + "/comment/remove/{id}",
       columns: [{
         checkbox: true
       },
@@ -53,11 +54,6 @@
           }
         },
         {
-          field: 'sorted',
-          title: '显示排序',
-          sortable: true
-        },
-        {
           field: 'createTime',
           title: '创建时间',
           sortable: true
@@ -86,14 +82,14 @@
   /* 停用 */
   function disable(id) {
     $.modal.confirm("确认要停用该电子刊吗？", function() {
-      $.operate.post(prefix + "/changeStatus", { "id": id, "status": 0 });
+      $.operate.post(prefix + "/comment/changeStatus", { "id": id, "status": 0 });
     })
   }
 
   /* 启用 */
   function enable(id) {
     $.modal.confirm("确认要启用该电子刊吗？", function() {
-      $.operate.post(prefix + "/changeStatus", { "id": id, "status": 1 });
+      $.operate.post(prefix + "/comment/changeStatus", { "id": id, "status": 1 });
     })
   }
 

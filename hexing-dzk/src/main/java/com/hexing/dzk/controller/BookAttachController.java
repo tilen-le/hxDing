@@ -10,11 +10,9 @@ import com.hexing.common.core.page.TableDataInfo;
 import com.hexing.common.enums.BusinessType;
 import com.hexing.common.utils.ShiroUtils;
 import com.hexing.common.utils.StringUtils;
+import com.hexing.common.utils.bean.BeanUtils;
 import com.hexing.common.utils.file.FileUploadUtils;
-import com.hexing.dzk.domain.BookAttach;
-import com.hexing.dzk.domain.BookComment;
-import com.hexing.dzk.domain.BookPraise;
-import com.hexing.dzk.domain.EleBook;
+import com.hexing.dzk.domain.*;
 import com.hexing.dzk.service.IBookService;
 import com.hexing.dzk.tool.GetUserMsg;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,18 +51,28 @@ public class BookAttachController extends BaseController {
     private IBookService bookService;
 
 
-    @Value("token.appkey")
+    @Value("${token.appkey}")
     private String key;
 
-    @Value("token.appsecret")
+    @Value("${token.appsecret}")
     private String appsecret;
 
     @PostMapping("/list")
     @ResponseBody
     public TableDataInfo list(BookAttach bookAttach) {
         startPage();
+        List<EleBookMsg> list1 = new ArrayList<>();
         List<BookAttach> list = bookService.getBookAttachList(bookAttach);
-        return getDataTable(list);
+        for (BookAttach it: list){
+            EleBookMsg eleBookMsg = new EleBookMsg();
+            BeanUtils.copyProperties(it,eleBookMsg);
+            Integer praiseNum = bookService.countBookPraise(it.getId());
+            Integer commentNum = bookService.countBookComment(it.getId());
+            eleBookMsg.setPraiseNum(praiseNum);
+            eleBookMsg.setCommentNum(commentNum);
+            list1.add(eleBookMsg);
+        }
+        return getDataTable(list1);
     }
 
     @Log(title = "期刊管理", businessType = BusinessType.UPDATE)
@@ -204,39 +213,31 @@ public class BookAttachController extends BaseController {
         HttpSession session = request.getSession();
         String userId= (String) session.getAttribute("userId");
         String name= (String) session.getAttribute("name");
+        session.setAttribute("bookId",id);
         if (StringUtils.isEmpty(userId) || StringUtils.isEmpty(name)){
             //如果session中没有 则调钉钉接口获取用户信息
             HashMap<String,String> map = GetUserMsg.getUserid(key,appsecret,code);
             //把用户信息放到session中后减少钉钉接口调用
-            session.setAttribute("userId",map.get("userId"));
-            session.setAttribute("name",map.get("name"));
+            userId=map.get("userId");
+            name=map.get("name");
+//            userId = "80015801";
+//            name = "徐乐乐(80015801)";
+            session.setAttribute("userId",userId);
+            session.setAttribute("name",name);
+
         }
         //用户是否为当前期刊点赞标识
-        Boolean praiseMark = bookService.praiseMark(Long.valueOf(userId), Integer.parseInt(id));
+        Boolean praiseMark = bookService.praiseMark(Long.parseLong(userId), Integer.parseInt(id));
         //返回数据
         mmap.put("num",Num);
         mmap.put("praiseMark",praiseMark);
         mmap.put("attach", attach);
+
         if ("pc".equals(from)) {
             return prefix + "/attach_pc";
         } else {
             return prefix + "/attach_phone";
         }
-    }
-
-    @GetMapping("/comment/{id}")
-    public String comment(@PathVariable("id") Integer id, ModelMap mmap) {
-        mmap.put("bookId", id);
-        return "ebook/attach/comment";
-    }
-
-    @PostMapping("/commentList")
-    @ResponseBody
-    public TableDataInfo list(HttpServletRequest request) {
-        String bookId = request.getParameter("id");
-        startPage();
-        List<BookComment> list = bookService.getAllComment(Integer.valueOf(bookId));
-        return getDataTable(list);
     }
 
 
@@ -257,6 +258,42 @@ public class BookAttachController extends BaseController {
         return AjaxResult.success("成功"+flag);
     }
 
+    @GetMapping("/comment/{id}")
+    public String comment(@PathVariable("id") Integer id, ModelMap mmap) {
+        mmap.put("bookId", id);
+        return "ebook/attach/comment";
+    }
+
+    @PostMapping("/commentList")
+    @ResponseBody
+    public TableDataInfo list(HttpServletRequest request) {
+        String bookId = request.getParameter("id");
+        startPage();
+        List<BookComment> list = bookService.getAllComment(Integer.valueOf(bookId));
+        return getDataTable(list);
+    }
+
+    @Log(title = "评论管理", businessType = BusinessType.DELETE)
+    @PostMapping("/comment/remove/{id}")
+    @ResponseBody
+    public AjaxResult commentRemove(@PathVariable("id") Integer id) {
+        try {
+            return toAjax(bookService.deleteCommentById(id));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return error(e.getMessage());
+        }
+    }
+
+
+    @Log(title = "期刊管理", businessType = BusinessType.UPDATE)
+    @PostMapping("/comment/changeStatus")
+    @ResponseBody
+    public AjaxResult commentChangeStatus(BookComment bookComment) {
+        return toAjax(bookService.commentChangeStatus(bookComment));
+    }
+
+
     @GetMapping("/getAllComment")
     @ResponseBody
     public AjaxResult getAllComment( HttpServletRequest request){
@@ -271,9 +308,11 @@ public class BookAttachController extends BaseController {
     public AjaxResult addComment(HttpServletRequest request,String comment){
         HttpSession session = request.getSession();
         String userId = (String) session.getAttribute("userId");
+        String userName = (String) session.getAttribute("name");
         String bookId = (String) session.getAttribute("bookId");
         BookComment bookComment = new BookComment();
         bookComment.setBookId(Integer.valueOf(bookId));
+        bookComment.setUserName(userName);
         bookComment.setUserId(Long.valueOf(userId));
         bookComment.setComment(comment);
         int n = 0;

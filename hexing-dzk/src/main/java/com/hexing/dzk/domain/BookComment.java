@@ -16,6 +16,11 @@ public class BookComment {
     private Integer bookId;
 
     /**
+     * 用户姓名
+     */
+    private String userName;
+
+    /**
     * 评论
     */
     private String comment;
@@ -57,6 +62,13 @@ public class BookComment {
 
     public void setBookId(Integer bookId) {
         this.bookId = bookId;
+    }
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getComment() {

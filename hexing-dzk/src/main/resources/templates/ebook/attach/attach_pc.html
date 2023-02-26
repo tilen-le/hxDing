@@ -34,79 +34,43 @@
             width: 840px;
             pointer-events:none;
         }
-        /* 内容 */
-        /*.content {*/
-        /*    border: 2px solid #eae2e1; !* 边框 *!*/
-        /*    padding: 13px 16px; !* 内边距 *!*/
-        /*    border-radius: 5px; !* 边框圆角 *!*/
-        /*    display: flex; !* 弹性盒模型 *!*/
-        /*    cursor: pointer; !* 鼠标样式 *!*/
-        /*    font-size: 15px; !* 字体大小 *!*/
-        /*    font-family: sans-serif;*/
-        /*}*/
-        /*.content.heart-active { !* 切换后样式 *!*/
-        /*    border-color: #cb455d; !* 修改边框颜色 *!*/
-        /*    background: #fbd0d8; !*  修改背景颜色*!*/
-        /*}*/
-
 
         .user-forum-thumbs {
             width: 100%;
             height: 10vh;
-            margin-top: 3%;
+            line-height: 10vh;
+        }
+        .commentBotton {
+            width: 840px;
+            height: 8vh;
+            line-height: 8vh;
+            background: #ece9e9;
+            float: left;
+            text-align: left;
+            font-family: '宋体';
+            border-color: #dddddd;
+            border-radius:5px;
         }
 
-        .user-forum-thumbs>button {
-            width: 15%;
-            text-align: center;
-            /*padding-right: 2%;*/
-            float: right;
-            border: 0;
-            outline: none;
-            background-color: #ffffff;
-            cursor: pointer;
-            font-size: 13px;
-            height: 10vh;
-        }
-
-        .user-forum-thumbs>button:hover {
-            color: red;
-        }
-
-        .user-forum-thumbs>button>img {
-            display: inline-block;
-            padding-bottom: 0.4vh;
-            padding-right: 1vw;
-        }
-
-        .user-forum-thumbs>span {
-            width: 5%;
-            text-align: center;
-            line-height:10vh ;
-            float: right;
-            padding-right: 5%;
-            margin-bottom: 2%;
-        }
-
-        .user-com-go{
-            background-color: #eed8d8;
-            background-color:rgba(0, 0, 0, 0.3)
-        }
         .user-content-solid {
             width: 840px;
-            border-bottom: 1px solid #cdcecf;
-            margin-top: 3%;
+            border-bottom: 2px solid #cdcecf;
+            margin-inside: 5px;
         }
-        .dialogtextarea {
+        .goodComment {
             width: 840px;
-            margin: 1%;
-            padding: 1%;
+            height: 30px;
+            line-height: 30px;
+            background: #efeff1;
+            text-align: left;
+            font-family: Helvetica;
+            color: #696c6e;
         }
         .user-remarks-content {
             width: 840px;
-            height: 20px;
-            line-height: 20px;
-            background: #eed8d8;
+            height: 25px;
+            line-height: 25px;
+            background: #efeff1;
         }
 
         .user-remarks-content>p {
@@ -115,7 +79,7 @@
         }
 
         .user-remarks-content>p>span {
-            color: #de260d;
+            color: #686a6b;
         }
 
         .user-remarks-content>p>span>span {
@@ -131,16 +95,61 @@
             cursor: pointer;
         }
 
-        .user-remarks-content>button>img {
-            float: left;
-        }
-
         .user-remarks-content>button>span {
             float: left;
             margin-top: 0.2vh;
             font-size: 12px;
         }
 
+        .Input_Box {
+            width: 840px;
+            height: 105px;
+        }
+        .Input_Box>textarea {
+            width: 840px;
+            height: 70px;
+            padding: 5px;
+            outline: none;
+            border: 0px solid #fff;
+            resize: none;
+            font: 13px “微软雅黑”, Arial, Helvetica, sans-serif;
+            -moz-border-radius: 5px;
+            -webkit-border-radius: 5px;
+            border-radius: 5px;
+        }
+        .Input_Foot {
+            width: 840px;
+            height: 35px;
+            border-top: 1px solid #ccc;
+            background-color: #fff;
+            -moz-border-radius: 0 0 5px 5px;
+            -webkit-border-radius: 0 0 5px 5px;
+            border-radius: 0 0 5px 5px;
+            position: absolute;
+        }
+        .postBtn {
+            float: right;
+            font: 13px “微软雅黑”, Arial, Helvetica, sans-serif;
+            color: #808080;
+            padding: 9px 20px 7px 20px;
+            border-left: 1px solid #ccc;
+            cursor: pointer;
+            -moz-border-radius: 0 0 5px 0;
+            -webkit-border-radius: 0 0 5px 0;
+            border-radius: 0 0 5px 0;
+            background-color: #e4e9ec;
+        }
+        .postBtn:hover {
+            color: #333;
+            background-color: #f33232;
+        }
+        .postBtn:active {
+            padding: 10px 20px 6px 20px;
+        }
+        .fa fa-thumbs-o-up {
+            width: 20px;
+            height: 20px;
+        }
     </style>
 
     <script type="text/javascript" th:src="@{/dzk/jquery.min.1.7.js}"></script>
@@ -156,40 +165,30 @@
         <div style="width: 840px;margin: auto;">
             <img class="imgContain" th:src="@{${attach.attachUrl}}">
             <div class="user-forum-thumbs">
-
-                <button id="openspeek">
-                    <img src="../../img/comment%20.png">
-                    <span>评论</span>
-                </button>
-
-                <span id="num" th:text="${num}"></span>
-                <button  class="content" >
-                    <img src="../../img/witer.png">
-                    <span>点赞</span>
-                </button>
-            </div>
-
-            <div class="user-content-solid"></div>
-
-            <div class="dialog-wrap dialog-wrap-show" style="display: none;width: 100%;" id="dialogs">
-                <div class="dialog-overlay"></div>
-                <div class="dialog-content">
-                    <div class="dialog-content-hd">
-                        <h4 class="dialog-content-title">评论</h4>
-                    </div>
-                    <div class="dialog-content-bd">
-						<textarea name="dialog" id="dialogtext" class="dialogtextarea"
-                                  placeholder="输入你想说的内容...">
-                        </textarea>
-                    </div>
-                    <div class="dialog-content-ft">
-                        <a class="dialog-btn dialog-btn-cancel" id="diacloses" onclick="diacloses()">取消</a>
-                        <a class="dialog-btn dialog-btn-ok" id="diacloses2" onclick="addDiv()">确定</a>
-                    </div>
+                <div style="width: 840px;height: 3vh;margin-top: 2vh">
+                    <a href="#thumbs-o-up" id="up" onclick="thumbUpClock()" style="height: 3vh;float: right;margin-right: 4vh;line-height: 3vh"><i class="fa fa-thumbs-o-up"></i></a>
+                    <a href="#thumbs-up" id="down" onclick="thumbUpClock()" style="height: 3vh;float: right;margin-right: 4vh;line-height: 3vh"><i class="fa fa-thumbs-up"></i></a>
+                </div>
+                <div style="width: 840px;height: 5vh;margin-right: 2vh">
+                    <span id="num" th:text="${num}" style="height: 4vh;float: right ;line-height: 4vh;margin-right: 4vh"></span>
                 </div>
             </div>
+            <div class="user-content-solid"></div>
 
-            <div class="user-remarks-addcontent" id="addcontent"></div>
+            <div style="width: 840px;height: 8vh" id="openspeekShow"><button id="openspeek" class="commentBotton">写下你的留言</button></div>
+            <div class="Input_Box" id="input" style="display: none">
+                <textarea class="Input_text" id="inputText" placeholder="描述不能超过200个字！"
+                          maxlength="200" οnchange="this.value=this.value.substring(0, 200)"
+                          οnkeydοwn="this.value=this.value.substring(0, 200)"
+                          οnkeyup="this.value=this.value.substring(0, 200)">
+                </textarea>
+                <div class="Input_Foot"> <a class="imgBtn" href="javascript:void(0);"></a><a class="postBtn" onclick="addDiv()">确定</a> </div>
+            </div>
+
+            <div style="margin-top: 10px">
+                <div class="goodComment">精选留言</div>
+                <div class="user-remarks-addcontent" id="addcontent"></div>
+            </div>
 
         </div>
     </div>
@@ -214,7 +213,12 @@
             // }
                 var show = [[${praiseMark}]];
                 if (!show){
-                    $('.content').toggleClass('heart-active')
+                    document.getElementById("up").style.display = "block";
+                    document.getElementById("down").style.display = "none";
+                    // $('.content').toggleClass('heart-active')
+                }else {
+                    document.getElementById("up").style.display = "none";
+                    document.getElementById("down").style.display = "block";
                 }
                 getAllComment()
                 function getAllComment(){
@@ -243,24 +247,24 @@
          * 点赞数
          * @type {number}
          */
-        $(document).ready(function() {
-            var flag = [[${praiseMark}]]
-            // 根据类名添加点击事件
-            $('.content').click(function() {
-                var n=document.getElementById("num");
-                // 根据类切换类名
-                $(this).toggleClass('heart-active')
-                if (flag){
-                    n.innerHTML=parseInt(n.innerHTML)+1;
-                    flag = false;
-                    thumbsUp(flag)
-                }else {
-                    n.innerHTML=parseInt(n.innerHTML)-1;
-                    flag = true;
-                    thumbsUp(flag)
-                }
-            })
-        });
+        var flag = [[${praiseMark}]]
+        function thumbUpClock() {
+            var n = document.getElementById("num");
+            // 根据类切换类名
+            if (flag) {
+                n.innerHTML = parseInt(n.innerHTML) + 1;
+                document.getElementById("up").style.display = "block";
+                document.getElementById("down").style.display = "none";
+                flag = false;
+                thumbsUp(flag)
+            } else {
+                n.innerHTML = parseInt(n.innerHTML) - 1;
+                document.getElementById("up").style.display = "none";
+                document.getElementById("down").style.display = "block";
+                flag = true;
+                thumbsUp(flag)
+            }
+        };
         function thumbsUp(flag) {
             $.ajax({
                 type: "Get",
@@ -284,69 +288,67 @@
         /**
          * 评论
          */
-        // 评论
         $(document).ready(function() {
             $("#openspeek").click(function() {
-                $("#dialogs").toggle();
+                document.getElementById("input").style.display = "block";
+                document.getElementById("openspeekShow").style.display = "none";
             });
         });
-        // 评论弹窗关闭
-        function diacloses() {
-            document.getElementById("dialogs").style.display = "none";
-        };
-        // 发表评论
+
         function addDiv() {
             var commentList = []
-            var txt4 = document.getElementById('dialogtext').value;
-            $.ajax({
-                type: "Post",
-                cache: false,
-                url: "/dzk/ebook/attach/addComment",
-                data: {"comment":txt4},
-                dataType: "json",
-                success: function (result) {
-                    if (result.code==0){
-                        console.log(result.msg)
-                        commentList = result.data
-                        drowComment(commentList)
-                    }else {
+            var txt4 = document.getElementById('inputText').value;
+            if (txt4 == '' || txt4 == ' ') {
+                alert('请输入评论内容！');
+                document.getElementById("input").style.display = "none";
+                document.getElementById("openspeekShow").style.display = "block";
+            }else {
+                $.ajax({
+                    type: "Post",
+                    cache: false,
+                    url: "/dzk/ebook/attach/addComment",
+                    data: {"comment":txt4},
+                    dataType: "json",
+                    success: function (result) {
+                        if (result.code==0){
+                            console.log(result.msg)
+                            commentList = result.data
+                            drowComment(commentList)
+                        }else {
+                            console.log(result.msg)
+                        }
+                    },
+                    error: function (result) {
                         console.log(result.msg)
                     }
-                },
-                error: function (result) {
-                    console.log(result.msg)
-                }
-            });
-
+                });
+            }
         };
         function drowComment(commentList){
+            document.getElementById("addcontent").innerHTML =null;
             for (let list of commentList){
                 // 添加节点嵌套
                 var node = document.createElement('div');
+                var a=document.createElement("a");
+                var btn1 = document.createElement('button');
                 var txt1 = document.createElement("p");
                 var txt2 = document.createElement("span");
                 var txt3 = document.createElement("span");
-                var btn1 = document.createElement('button');
-                var btntxt = document.createElement('span');
-                if (list.comment == '' || list.comment == ' ') {
-                    alert('请输入评论内容！');
-                } else {
-                    node.className = 'user-remarks-content';
-                    btn1.id = 'btndel';
-                    // 插入内容
-                    txt2.innerHTML = list.userId;
-                    txt3.innerHTML = list.comment;
-                    btntxt.innerHTML = "删除";
-                    txt1.appendChild(txt2);
-                    txt2.appendChild(txt3);
-                    node.appendChild(txt1);
-                    document.getElementById("addcontent").appendChild(node);
-                }
+                node.className = 'user-remarks-content';
+                // 插入内容
+                txt2.innerHTML = list.userName+":";
+                txt3.innerHTML = list.comment;
+                a.innerHTML=' <a href="#user" ><i class="fa fa-user"></i></a>';
+                txt1.appendChild(btn1);
+                btn1.appendChild(a);
+                txt1.appendChild(txt2);
+                txt2.appendChild(txt3);
+                node.appendChild(txt1);
+                document.getElementById("addcontent").appendChild(node);
             }
-            // 输入null内容后跳出弹窗
-            document.getElementById("dialogs").style.display = "none";
-            // 跳出弹窗后清空文本内容
-            $('#dialogtext').val('');
+            document.getElementById("input").style.display = "none";
+            document.getElementById("openspeekShow").style.display = "block";
+            $('#inputText').val('');
         }
     </script>
     </body>

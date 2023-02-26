@@ -137,5 +137,20 @@ public class BookServiceImpl implements IBookService {
         return list;
     }
 
+    @Override
+    public int deleteCommentById(Integer id) {
+        return bookCommentMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
+    public int commentChangeStatus(BookComment bookComment) {
+        return bookCommentMapper.updateByPrimaryKeySelective(bookComment);
+    }
+
+    @Override
+    public int countBookComment(Integer bookId) {
+        return bookCommentMapper.countByBookId(bookId);
+    }
+
 
 }

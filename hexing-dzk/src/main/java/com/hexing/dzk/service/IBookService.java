@@ -66,4 +66,10 @@ public interface IBookService {
 
     List<BookComment> getAllComment(Integer bookID);
 
+    int deleteCommentById(Integer id);
+
+    int commentChangeStatus(BookComment bookComment);
+
+    int countBookComment(Integer bookId);
+
 }

@@ -7,8 +7,10 @@ import com.hexing.common.core.domain.AjaxResult;
 import com.hexing.common.core.page.TableDataInfo;
 import com.hexing.common.enums.BusinessType;
 import com.hexing.common.utils.StringUtils;
+import com.hexing.common.utils.bean.BeanUtils;
 import com.hexing.common.utils.file.FileUploadUtils;
 import com.hexing.dzk.domain.EleBook;
+import com.hexing.dzk.domain.EleBookMsg;
 import com.hexing.dzk.service.IBookService;
 import com.hexing.dzk.tool.GetUserMsg;
 import org.springframework.stereotype.Controller;
@@ -19,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -42,8 +45,6 @@ public class EleBookController extends BaseController {
     @Resource
     private IBookService bookService;
 
-    @Resource
-    private GetUserMsg getUserMsg;
 
     @PostMapping("/list")
     @ResponseBody
