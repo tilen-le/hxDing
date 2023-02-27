@@ -132,8 +132,6 @@ public class BookServiceImpl implements IBookService {
     @Override
     public List<BookComment> getAllComment(Integer bookID) {
         List<BookComment> list = bookCommentMapper.selectAllByBookId(bookID);
-        String s = list.toString();
-        System.out.println("s = " + s);
         return list;
     }
 
