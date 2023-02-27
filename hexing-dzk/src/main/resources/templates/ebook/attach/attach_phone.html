@@ -58,18 +58,18 @@
 
     </script>
     <script type="text/javascript" th:inline="javascript">
-        $(function() {
-            if (dd.env.platform=="notInDingTalk") {
-                alert("请用钉钉打开！");
-                return;
-            } else {
+        // $(function() {
+        //     if (dd.env.platform=="notInDingTalk") {
+        //         alert("请用钉钉打开！");
+        //         return;
+        //     } else {
                 $('#dataDiv').show();
                 var attach = [[${attach}]];
                 if (attach == null || attach.attachUrl == null) {
                     $.modal.msgError("本期刊没有上传内容");
                 }
-            }
-        })
+        //     }
+        // })
 
     </script>
     </body>

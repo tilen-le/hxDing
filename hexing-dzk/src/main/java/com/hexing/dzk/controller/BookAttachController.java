@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -204,9 +205,20 @@ public class BookAttachController extends BaseController {
     public String readAttach(HttpServletRequest request, ModelMap mmap) {
         String id = request.getParameter("id");
         String from = request.getParameter("from");
-        String code = request.getParameter("code");
         //查询期刊
         BookAttach attach = bookService.getAttachById(Long.parseLong(id));
+        mmap.put("attach", attach);
+        if ("pc".equals(from)) {
+            return prefix + "/attach_pc";
+        } else {
+            return prefix + "/attach_phone";
+        }
+    }
+    @GetMapping("/getCode")
+    @ResponseBody
+    public AjaxResult getCode(HttpServletRequest request){
+        String id = request.getParameter("id");
+        String code = request.getParameter("code");
         //查询期刊点赞数量
         int Num = bookService.countBookPraise(Integer.parseInt(id));
         //判断session中是否有用户信息
@@ -216,12 +228,12 @@ public class BookAttachController extends BaseController {
         session.setAttribute("bookId",id);
         if (StringUtils.isEmpty(userId) || StringUtils.isEmpty(name)){
             //如果session中没有 则调钉钉接口获取用户信息
-            HashMap<String,String> map = GetUserMsg.getUserid(key,appsecret,code);
+//            HashMap<String,String> map = GetUserMsg.getUserid(key,appsecret,code);
             //把用户信息放到session中后减少钉钉接口调用
-            userId=map.get("userId");
-            name=map.get("name");
-//            userId = "80015801";
-//            name = "徐乐乐(80015801)";
+//            userId=map.get("userId");
+//            name=map.get("name");
+            userId = "80015801";
+            name = "徐乐乐(80015801)";
             session.setAttribute("userId",userId);
             session.setAttribute("name",name);
 
@@ -229,17 +241,11 @@ public class BookAttachController extends BaseController {
         //用户是否为当前期刊点赞标识
         Boolean praiseMark = bookService.praiseMark(Long.parseLong(userId), Integer.parseInt(id));
         //返回数据
-        mmap.put("num",Num);
-        mmap.put("praiseMark",praiseMark);
-        mmap.put("attach", attach);
-
-        if ("pc".equals(from)) {
-            return prefix + "/attach_pc";
-        } else {
-            return prefix + "/attach_phone";
-        }
+        Map<String,Object> map = new HashMap<>();
+        map.put("num",Num);
+        map.put("praiseMark",praiseMark);
+        return AjaxResult.success(map);
     }
-
 
     @GetMapping("/thumbsUp")
     @ResponseBody
@@ -286,7 +292,6 @@ public class BookAttachController extends BaseController {
     }
 
 
-    @Log(title = "期刊管理", businessType = BusinessType.UPDATE)
     @PostMapping("/comment/changeStatus")
     @ResponseBody
     public AjaxResult commentChangeStatus(BookComment bookComment) {
@@ -297,8 +302,7 @@ public class BookAttachController extends BaseController {
     @GetMapping("/getAllComment")
     @ResponseBody
     public AjaxResult getAllComment( HttpServletRequest request){
-        HttpSession session = request.getSession();
-        String bookId = (String) session.getAttribute("bookId");
+        String bookId = request.getParameter("id");
         List<BookComment> list = bookService.getAllComment(Integer.valueOf(bookId));
         return AjaxResult.success("成功获取所有评论列表",list);
     }

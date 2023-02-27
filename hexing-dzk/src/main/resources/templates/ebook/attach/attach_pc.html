@@ -207,61 +207,109 @@
             // } else {
                 $('#dataDiv').show();
                 var attach = [[${attach}]];
+                var id = [[${attach.id}]];
+                var flag = true;
+                var code = "";
+                var data = {"code":code,"id":id}
                 if (attach == null || attach.attachUrl == null) {
                     $.modal.msgError("本期刊没有上传内容");
                 }
             // }
-                var show = [[${praiseMark}]];
-                if (!show){
-                    document.getElementById("up").style.display = "block";
-                    document.getElementById("down").style.display = "none";
-                    // $('.content').toggleClass('heart-active')
-                }else {
-                    document.getElementById("up").style.display = "none";
-                    document.getElementById("down").style.display = "block";
-                }
-                getAllComment()
-                function getAllComment(){
-                    $.ajax({
-                        type: "Get",
-                        cache: false,
-                        url: "/dzk/ebook/attach/getAllComment",
-                        dataType: "json",
-                        success: function (result) {
-                            if (result.code==0){
-                                console.log(result.msg)
-                                var commentList = result.data
-                                drowComment(commentList)
-                            }else {
-                                console.log(result.msg)
-                            }
-                        },
-                        error: function (result) {
-                            console.log(result.msg)
-                        }
-                    });
-                }
+                init(data)
+                getAllComment(id)
 
         })
+        function init(data) {
+            /**
+             * 钉钉回调函数
+             */
+            dd.ready(function() {
+                // dd.ready参数为回调函数，在环境准备就绪时触发，jsapi的调用需要保证在该回调函数触发后调用，否则无效。
+                dd.runtime.permission.requestAuthCode({
+                    corpId: "ding389cf0d9a2e1cc2f",//线上
+                    // corpId: "dingdab143b5a957258df2c783f7214b6d69",//测试
+                    onSuccess: function(result) {
+                        data.code=result.code;
+                        // addAccessRecords(data);
+                    },
+                    onFail : function(err) {
+                        // $.modal.msgError("请在钉钉中打开该页面");
+                    }
+                });
+            });
+            getCode()
+            function getCode() {
+                $.ajax({
+                    type: "Get",
+                    cache: false,
+                    url: "/dzk/ebook/attach/getCode?code="+data.code+"&id="+data.id,
+                    dataType: "json",
+                    success: function (result) {
+                        if (result.code==0){
+                            console.log(result.msg)
+                            let show = result.data.praiseMark;
+                            this.flag = show;
+                            document.getElementById("num").innerHTML = result.data.num;
+                            if (!show){
+                                document.getElementById("up").style.display = "block";
+                                document.getElementById("down").style.display = "none";
+                            }else {
+                                document.getElementById("up").style.display = "none";
+                                document.getElementById("down").style.display = "block";
+                            }
+
+                        }else {
+                            console.log(result.msg)
+                        }
+                    },
+                    error: function (result) {
+                        console.log(result.msg)
+                    }
+                });
+            }
+        }
+        /**
+         * 获取评论列表
+         */
+        function getAllComment(data){
+            $.ajax({
+                type: "Get",
+                cache: false,
+                url: "/dzk/ebook/attach/getAllComment?id="+data,
+                dataType: "json",
+                success: function (result) {
+                    if (result.code==0){
+                        console.log(result.msg)
+                        var commentList = result.data
+                        drowComment(commentList)
+                    }else {
+                        console.log(result.msg)
+                    }
+                },
+                error: function (result) {
+                    console.log(result.msg)
+                }
+            });
+        }
         /**
          * 点赞数
          * @type {number}
          */
-        var flag = [[${praiseMark}]]
+
         function thumbUpClock() {
             var n = document.getElementById("num");
             // 根据类切换类名
-            if (flag) {
+            if (this.flag) {
                 n.innerHTML = parseInt(n.innerHTML) + 1;
                 document.getElementById("up").style.display = "block";
                 document.getElementById("down").style.display = "none";
-                flag = false;
+                this.flag = false;
                 thumbsUp(flag)
             } else {
                 n.innerHTML = parseInt(n.innerHTML) - 1;
                 document.getElementById("up").style.display = "none";
                 document.getElementById("down").style.display = "block";
-                flag = true;
+                this.flag = true;
                 thumbsUp(flag)
             }
         };
