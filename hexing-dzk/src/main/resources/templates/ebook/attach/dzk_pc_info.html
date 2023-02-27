@@ -92,29 +92,10 @@
                 $.modal.msgError("本刊暂时没有任何期刊");
             }
         // }
-
-        var code = ''
-        /**
-         * 钉钉回调函数
-         */
-        dd.ready(function() {
-            // dd.ready参数为回调函数，在环境准备就绪时触发，jsapi的调用需要保证在该回调函数触发后调用，否则无效。
-            dd.runtime.permission.requestAuthCode({
-                corpId: "ding389cf0d9a2e1cc2f",//线上
-                // corpId: "dingdab143b5a957258df2c783f7214b6d69",//测试
-                onSuccess: function(result) {
-                    this.code=result.code;
-                    // addAccessRecords(data);
-                },
-                onFail : function(err) {
-                    // $.modal.msgError("请在钉钉中打开该页面");
-                }
-            });
-        });
     })
 
     function readAttach(id) {
-        window.location.href = '/dzk/ebook/attach/readAttach?id=' + id + "&from=pc"+"&code="+this.code;
+        window.location.href = '/dzk/ebook/attach/readAttach?id=' + id + "&from=pc";
     }
 
 /*    function backBook() {

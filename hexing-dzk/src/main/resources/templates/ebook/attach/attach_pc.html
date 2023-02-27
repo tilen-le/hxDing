@@ -37,8 +37,8 @@
 
         .user-forum-thumbs {
             width: 100%;
-            height: 10vh;
-            line-height: 10vh;
+            height: 8vh;
+            line-height: 8vh;
         }
         .commentBotton {
             width: 840px;
@@ -68,37 +68,40 @@
         }
         .user-remarks-content {
             width: 840px;
-            height: 25px;
-            line-height: 25px;
+            height: 10vh;
+            line-height: 10vh;
             background: #efeff1;
+            border-radius: 5px;
+            box-shadow: #dddddd;
+        }
+        .content-p-head {
+            height: 5vh;
+            line-height: 5vh;
+            margin: 0px 0px 0px;
+        }
+        .content-p-body {
+            height: 5vh;
+            line-height: 5vh;
+            margin: 0px 0px 0px;
         }
 
-        .user-remarks-content>p {
+        .content-p-head>span {
+            font-family: 黑体;
             font-size: 18px;
-            font-family: "宋体";
+            color: #0c0c0c;
+            padding-left: 4vw;
         }
 
-        .user-remarks-content>p>span {
-            color: #686a6b;
-        }
-
-        .user-remarks-content>p>span>span {
-            color: black;
-        }
-
-        .user-remarks-content>button {
-            width: 16%;
-            border: 0;
-            height: 3vh;
-            background-color: #ffffff;
-            color: #0e90d2;
-            cursor: pointer;
-        }
-
-        .user-remarks-content>button>span {
-            float: left;
-            margin-top: 0.2vh;
+        .content-p-body>span {
+            font-family: 黑体;
             font-size: 12px;
+            color: #7c7a7a;
+        }
+
+        .content-p-head>button {
+            width: 4vw;
+            height: 4vh;
+            background-color: #bbbbe7;
         }
 
         .Input_Box {
@@ -200,6 +203,9 @@
 
     </script>
     <script type="text/javascript" th:inline="javascript">
+        var userId = null;
+        var userName = "";
+        var id = [[${attach.id}]];
         $(function() {
             // if (dd.env.platform=="notInDingTalk") {
             //     alert("请用钉钉打开！");
@@ -207,18 +213,18 @@
             // } else {
                 $('#dataDiv').show();
                 var attach = [[${attach}]];
-                var id = [[${attach.id}]];
-                var flag = true;
-                var code = "";
-                var data = {"code":code,"id":id}
                 if (attach == null || attach.attachUrl == null) {
                     $.modal.msgError("本期刊没有上传内容");
                 }
-            // }
+                var data = {"code":null,"id":id}
                 init(data)
-                getAllComment(id)
-
+            // }
         })
+
+        /**
+         * 初始化
+         * @param data
+         */
         function init(data) {
             /**
              * 钉钉回调函数
@@ -231,42 +237,50 @@
                     onSuccess: function(result) {
                         data.code=result.code;
                         // addAccessRecords(data);
+
                     },
                     onFail : function(err) {
                         // $.modal.msgError("请在钉钉中打开该页面");
                     }
                 });
             });
-            getCode()
-            function getCode() {
-                $.ajax({
-                    type: "Get",
-                    cache: false,
-                    url: "/dzk/ebook/attach/getCode?code="+data.code+"&id="+data.id,
-                    dataType: "json",
-                    success: function (result) {
-                        if (result.code==0){
-                            console.log(result.msg)
-                            let show = result.data.praiseMark;
-                            this.flag = show;
-                            document.getElementById("num").innerHTML = result.data.num;
-                            if (!show){
-                                document.getElementById("up").style.display = "block";
-                                document.getElementById("down").style.display = "none";
-                            }else {
-                                document.getElementById("up").style.display = "none";
-                                document.getElementById("down").style.display = "block";
-                            }
+            getCode(data)
+            getAllComment(data.id)
+        }
 
+        /**
+         * 用code换取用户信息
+         */
+        function getCode(data) {
+            $.ajax({
+                type: "Get",
+                cache: false,
+                url: "/dzk/ebook/attach/getCode?code="+data.code+"&id="+data.id,
+                dataType: "json",
+                success: function (result) {
+                    if (result.code==0){
+                        console.log(result.msg)
+                        let show = result.data.praiseMark;
+                        this.flag = show;
+                        console.log(window.userId)
+                        window.userId = result.data.userId;
+                        window.userName = result.data.name;
+                        document.getElementById("num").innerHTML = result.data.num;
+                        if (!show){
+                            document.getElementById("up").style.display = "block";
+                            document.getElementById("down").style.display = "none";
                         }else {
-                            console.log(result.msg)
+                            document.getElementById("up").style.display = "none";
+                            document.getElementById("down").style.display = "block";
                         }
-                    },
-                    error: function (result) {
+                    }else {
                         console.log(result.msg)
                     }
-                });
-            }
+                },
+                error: function (result) {
+                    console.log(result.msg)
+                }
+            });
         }
         /**
          * 获取评论列表
@@ -317,7 +331,7 @@
             $.ajax({
                 type: "Get",
                 cache: false,
-                url: "/dzk/ebook/attach/thumbsUp",
+                url: "/dzk/ebook/attach/thumbsUp?id="+window.id+"&userId="+window.userId,
                 data: {"flag":flag},
                 dataType: "json",
                 success: function (result) {
@@ -354,7 +368,7 @@
                 $.ajax({
                     type: "Post",
                     cache: false,
-                    url: "/dzk/ebook/attach/addComment",
+                    url: "/dzk/ebook/attach/addComment?id="+id+"&userId="+window.userId+"&userName="+window.userName,
                     data: {"comment":txt4},
                     dataType: "json",
                     success: function (result) {
@@ -372,25 +386,33 @@
                 });
             }
         };
+        /**
+         * 评论列表
+         * @param commentList
+         */
         function drowComment(commentList){
             document.getElementById("addcontent").innerHTML =null;
             for (let list of commentList){
                 // 添加节点嵌套
                 var node = document.createElement('div');
-                var a=document.createElement("a");
-                var btn1 = document.createElement('button');
                 var txt1 = document.createElement("p");
                 var txt2 = document.createElement("span");
-                var txt3 = document.createElement("span");
+                var txt3 = document.createElement("p");
+                var btn1 = document.createElement('button');
+                var a=document.createElement("a");
+                var txt4 = document.createElement("span");
                 node.className = 'user-remarks-content';
+                txt1.className = 'content-p-head';
+                txt3.className = 'content-p-body';
                 // 插入内容
-                txt2.innerHTML = list.userName+":";
-                txt3.innerHTML = list.comment;
+                txt4.innerHTML = list.userName+":";
+                txt2.innerHTML = list.comment;
                 a.innerHTML=' <a href="#user" ><i class="fa fa-user"></i></a>';
-                txt1.appendChild(btn1);
+                txt3.appendChild(btn1);
                 btn1.appendChild(a);
+                txt3.appendChild(txt4);
+                node.appendChild(txt3);
                 txt1.appendChild(txt2);
-                txt2.appendChild(txt3);
                 node.appendChild(txt1);
                 document.getElementById("addcontent").appendChild(node);
             }

@@ -35,7 +35,7 @@
       `comment`, `status`, create_time, 
       remark)
     values (#{userId,jdbcType=BIGINT}, #{bookId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, 
-      #{comment,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{comment,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, now(),
       #{remark,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.hexing.dzk.domain.BookComment" useGeneratedKeys="true">
@@ -107,9 +107,7 @@
       <if test="status != null">
         `status` = #{status,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
+        create_time = now(),
       <if test="remark != null">
         remark = #{remark,jdbcType=VARCHAR},
       </if>
@@ -124,7 +122,7 @@
       user_name = #{userName,jdbcType=VARCHAR},
       `comment` = #{comment,jdbcType=VARCHAR},
       `status` = #{status,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_time = now(),
       remark = #{remark,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>

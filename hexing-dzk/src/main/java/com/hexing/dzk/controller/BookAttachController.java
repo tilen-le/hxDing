@@ -236,7 +236,6 @@ public class BookAttachController extends BaseController {
             name = "徐乐乐(80015801)";
             session.setAttribute("userId",userId);
             session.setAttribute("name",name);
-
         }
         //用户是否为当前期刊点赞标识
         Boolean praiseMark = bookService.praiseMark(Long.parseLong(userId), Integer.parseInt(id));
@@ -244,6 +243,8 @@ public class BookAttachController extends BaseController {
         Map<String,Object> map = new HashMap<>();
         map.put("num",Num);
         map.put("praiseMark",praiseMark);
+        map.put("userId",userId);
+        map.put("name",name);
         return AjaxResult.success(map);
     }
 
@@ -251,8 +252,8 @@ public class BookAttachController extends BaseController {
     @ResponseBody
     public AjaxResult thumbsUp(HttpServletRequest request,Boolean flag) {
         HttpSession session = request.getSession();
-        String bookId = (String) session.getAttribute("bookId");
-        String userId = (String) session.getAttribute("userId");
+        String bookId = request.getParameter("bookId");
+        String userId = request.getParameter("userId");
         BookPraise bookPraise = new BookPraise();
         bookPraise.setBookId(Integer.valueOf(bookId));
         bookPraise.setUserId(Long.valueOf(userId));
@@ -310,10 +311,9 @@ public class BookAttachController extends BaseController {
     @PostMapping("/addComment")
     @ResponseBody
     public AjaxResult addComment(HttpServletRequest request,String comment){
-        HttpSession session = request.getSession();
-        String userId = (String) session.getAttribute("userId");
-        String userName = (String) session.getAttribute("name");
-        String bookId = (String) session.getAttribute("bookId");
+        String userId = request.getParameter("userId");
+        String userName = request.getParameter("userName");
+        String bookId = request.getParameter("id");
         BookComment bookComment = new BookComment();
         bookComment.setBookId(Integer.valueOf(bookId));
         bookComment.setUserName(userName);
