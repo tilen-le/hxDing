@@ -10,6 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="wpk-bid" content="dta_1_1196893985">
     <script type="text/javascript" src="https://g.alicdn.com/dingding/dingtalk-jsapi/2.10.3/dingtalk.open.js"></script>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/layui.css" media="all">
     <script>
         !(function (c, i, e, b) {
             var h = i.createElement("script");
@@ -153,6 +154,25 @@
             width: 20px;
             height: 20px;
         }
+        .comment_content {
+            margin-top:10px;
+            font-size:16px;
+        }
+
+        .imgdiv{
+            float:left;
+        }
+        .imgcss {
+            width:50px;
+            height:50px;
+            border-radius: 50%;
+        }
+        .comment_name {
+            margin-left:10px;
+            color:#3D9EEA;
+            font-size:15px;
+            font-weight: bolder;
+        }
     </style>
 
     <script type="text/javascript" th:src="@{/dzk/jquery.min.1.7.js}"></script>
@@ -295,7 +315,7 @@
                     if (result.code==0){
                         console.log(result.msg)
                         var commentList = result.data
-                        drowComment(commentList)
+                        drowComment2(commentList)
                     }else {
                         console.log(result.msg)
                     }
@@ -375,7 +395,7 @@
                         if (result.code==0){
                             console.log(result.msg)
                             commentList = result.data
-                            drowComment(commentList)
+                            drowComment2(commentList)
                         }else {
                             console.log(result.msg)
                         }
@@ -420,6 +440,21 @@
             document.getElementById("openspeekShow").style.display = "block";
             $('#inputText').val('');
         }
+        function drowComment2(commentList){
+            document.getElementById("addcontent").innerHTML =null;
+            for (let list of commentList){
+                // 添加节点嵌套
+                var s = " ";
+                s += '<div class="comment">';
+                s += '<div class="imgdiv"><img class="imgcss"  src="/dzk/img/dingHead.png"/></div>';
+                s += '<div class="conmment_details">';
+                s +=  '<span class="comment_name">'+list.userName+ '</span>'+'<span>22分钟前</span>';
+                s += 	'<div class="comment_content" >'+list.comment+'</div>';
+                s += 	'</div><hr/></div>';
+                $(s).appendTo($("#addcontent"));
+            }
+        }
+
     </script>
     </body>
 </html>
