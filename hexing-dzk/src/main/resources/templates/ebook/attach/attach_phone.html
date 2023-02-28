@@ -36,25 +36,8 @@
         }
         .user-forum-thumbs {
             width: 100%;
-            height: 8vh;
-            line-height: 8vh;
-        }
-        .commentBotton {
-            width: 340px;
-            height: 8vh;
-            line-height: 8vh;
-            background: #ece9e9;
-            float: left;
-            text-align: left;
-            font-family: '宋体';
-            border-color: #dddddd;
-            border-radius:5px;
-        }
-
-        .user-content-solid {
-            width: 340px;
-            border-bottom: 2px solid #cdcecf;
-            margin-inside: 5px;
+            height: 7vh;
+            line-height: 7vh;
         }
         .goodComment {
             width: 340px;
@@ -74,8 +57,8 @@
             box-shadow: #dddddd;
         }
         .comment_content {
-            margin-top:10px;
-            font-size:16px;
+            margin-top: 8px;
+            font-size: 14px;
             padding-left: 60px;
         }
 
@@ -83,14 +66,14 @@
             float:left;
         }
         .imgcss {
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             border-radius: 25%;
         }
         .comment_name {
-            margin-left:10px;
-            color:#3D9EEA;
-            font-size:15px;
+            margin-left: 10px;
+            color: #3D9EEA;
+            font-size: 12px;
             font-weight: bolder;
         }
 
@@ -164,8 +147,9 @@
                     <a href="#thumbs-o-up" id="up" onclick="thumbUpClock()" style="height: 3vh;float: right;margin-right: 4vh;line-height: 3vh"><i class="fa fa-thumbs-o-up"></i></a>
                     <a href="#thumbs-up" id="down" onclick="thumbUpClock()" style="height: 3vh;float: right;margin-right: 4vh;line-height: 3vh"><i class="fa fa-thumbs-up"></i></a>
                 </div>
-                <div style="width: 340px;height: 4vh;margin-right: 2vh">
-                    <span id="num" th:text="${num}" style="height: 3vh;float: right ;line-height: 3vh;margin-right: 4vh"></span>
+                <div style="width: 340px;height: 3vh;margin-right: 2vh">
+                    <span id="num" style="height: 3vh;float: right ;line-height: 3vh;margin-right: 4vh"
+                          th:text="${num}"></span>
                 </div>
             </div>
 
@@ -235,7 +219,6 @@
                     }
                 });
             });
-
         }
 
         /**

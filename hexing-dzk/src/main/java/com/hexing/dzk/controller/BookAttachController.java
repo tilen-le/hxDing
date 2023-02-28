@@ -232,8 +232,8 @@ public class BookAttachController extends BaseController {
         //把用户信息放到session中后减少钉钉接口调用
         String userId = map.get("userId");
         String name = map.get("name");
-//            userId = "80015801";
-//            name = "徐乐乐(80015801)";
+//          String userId = "80015801";
+//          String name = "徐乐乐(80015801)";
         //用户是否为当前期刊点赞标识
         Boolean praiseMark = bookService.praiseMark(Long.parseLong(userId), Integer.parseInt(id));
         Integer countComment = bookService.countBookComment(Integer.parseInt(id));
