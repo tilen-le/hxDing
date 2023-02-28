@@ -178,6 +178,7 @@
         var userId = null;
         var userName = "";
         var id = [[${attach.id}]];
+        var flag = true;
         $(function() {
         //     if (dd.env.platform=="notInDingTalk") {
         //         alert("请用钉钉打开！");
@@ -232,7 +233,7 @@
                 dataType: "json",
                 success: function (result) {
                     if (result.code==0){
-                        var flag = result.data.praiseMark;
+                        window.flag = result.data.praiseMark;
                         window.userId = result.data.userId;
                         window.userName = result.data.name;
                         document.getElementById("countComment").innerHTML ="评论总数："+result.data.countComment;

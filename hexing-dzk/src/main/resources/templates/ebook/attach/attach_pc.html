@@ -170,6 +170,7 @@
         var userId = null;
         var userName = "";
         var id = [[${attach.id}]];
+        var flag = true;
         $(function() {
             // if (dd.env.platform=="notInDingTalk") {
             //     alert("请用钉钉打开！");
@@ -204,12 +205,13 @@
                         getCode(data)
                         getAllComment(data.id)
                     },
-                    onFail : function(err) {
+                    onFail: function (err) {
                         // $.modal.msgError("请在钉钉中打开该页面");
                     }
                 });
             });
-
+            getCode(data)
+            getAllComment(data.id)
         }
 
         /**
@@ -223,7 +225,7 @@
                 dataType: "json",
                 success: function (result) {
                     if (result.code==0){
-                        var flag = result.data.praiseMark;
+                        window.flag = result.data.praiseMark;
                         window.userId = result.data.userId;
                         window.userName = result.data.name;
                         document.getElementById("countComment").innerHTML ="评论总数："+result.data.countComment;
@@ -280,7 +282,7 @@
                 document.getElementById("down").style.display = "block";
                 window.flag = false;
                 thumbsUp(window.flag)
-            } else {
+            } else if (window.flag != true && n > 0) {
                 n.innerHTML = parseInt(n.innerHTML) - 1;
                 document.getElementById("up").style.display = "block";
                 document.getElementById("down").style.display = "none";
@@ -331,6 +333,7 @@
                             }
                             commentList = result.data
                             drowComment2(commentList)
+                            location.reload();
                         }else {
                             console.log(result.msg)
                         }

@@ -233,8 +233,8 @@ public class BookAttachController extends BaseController {
         //把用户信息放到session中后减少钉钉接口调用
         String userId = map.get("userId");
         String name = map.get("name");
-//          String userId = "80015801";
-//          String name = "徐乐乐(80015801)";
+//        String userId = "80015801";
+//        String name = "徐乐乐(80015801)";
         //用户是否为当前期刊点赞标识
         Boolean praiseMark = bookService.praiseMark(Long.parseLong(userId), Integer.parseInt(id));
         Integer countComment = bookService.countBookComment(Integer.parseInt(id));
@@ -329,7 +329,7 @@ public class BookAttachController extends BaseController {
         try {
             if (containsSensitiveWords) {
                 bookComment.setStatus("0");
-                n = bookService.addBookComment(bookComment);
+                bookService.addBookComment(bookComment);
                 List<BookComment> list = bookService.getAllComment(Integer.valueOf(bookId));
                 return AjaxResult.success("评论添加成功，但包含敏感词汇", list);
             } else {
