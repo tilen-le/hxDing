@@ -271,9 +271,10 @@ public class BookAttachController extends BaseController {
 
     @PostMapping("/commentList")
     @ResponseBody
-    public TableDataInfo list(BookCommentMsg bookCommentMsg) {
+    public TableDataInfo list(HttpServletRequest request, BookCommentMsg bookCommentMsg) {
         startPage();
         BookComment bookComment = new BookComment();
+        bookComment.setBookId(Integer.valueOf(request.getParameter("id")));
         bookComment.setUserName(bookCommentMsg.getName());
         bookComment.setStatus(bookCommentMsg.getStatus());
         List<BookComment> list = bookService.getAllComment(bookComment);
