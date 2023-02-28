@@ -64,7 +64,9 @@ public interface IBookService {
 
     int addBookComment(BookComment bookComment);
 
-    List<BookComment> getAllComment(Integer bookID);
+    List<BookComment> getAllComment(BookComment bookComment);
+
+    List<BookComment> getAllComment(Integer bookId);
 
     int deleteCommentById(Integer id);
 

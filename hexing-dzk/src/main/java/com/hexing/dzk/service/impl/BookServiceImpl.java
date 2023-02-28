@@ -130,8 +130,14 @@ public class BookServiceImpl implements IBookService {
     }
 
     @Override
-    public List<BookComment> getAllComment(Integer bookID) {
-        List<BookComment> list = bookCommentMapper.selectAllByBookId(bookID);
+    public List<BookComment> getAllComment(BookComment bookComment) {
+        List<BookComment> list = bookCommentMapper.selectByAll(bookComment);
+        return list;
+    }
+
+    @Override
+    public List<BookComment> getAllComment(Integer bookId) {
+        List<BookComment> list = bookCommentMapper.selectAllByBookId(bookId);
         return list;
     }
 
