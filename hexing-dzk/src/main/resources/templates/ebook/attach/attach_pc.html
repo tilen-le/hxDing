@@ -295,14 +295,14 @@
             // 根据类切换类名
             if (window.flag) {
                 n.innerHTML = parseInt(n.innerHTML) + 1;
-                document.getElementById("up").style.display = "block";
-                document.getElementById("down").style.display = "none";
+                document.getElementById("up").style.display = "none";
+                document.getElementById("down").style.display = "block";
                 window.flag = false;
                 thumbsUp(window.flag)
             } else {
                 n.innerHTML = parseInt(n.innerHTML) - 1;
-                document.getElementById("up").style.display = "none";
-                document.getElementById("down").style.display = "block";
+                document.getElementById("up").style.display = "block";
+                document.getElementById("down").style.display = "none";
                 window.flag = true;
                 thumbsUp(window.flag)
             }
