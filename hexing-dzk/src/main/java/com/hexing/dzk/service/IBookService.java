@@ -74,4 +74,13 @@ public interface IBookService {
 
     int countBookComment(Integer bookId);
 
+    /**
+     * 批量删除评论
+     *
+     * @param commentIds 评论id
+     * @return
+     */
+    void batchDelComment(List<Integer> commentIds);
+
+
 }

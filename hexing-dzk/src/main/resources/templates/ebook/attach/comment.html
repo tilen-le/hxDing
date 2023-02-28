@@ -21,8 +21,13 @@
             </li>
             <li>
               <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
-              <a class="btn btn-warning btn-rounded btn-sm" onclick="resetPre()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+              <a class="btn btn-warning btn-rounded btn-sm" onclick="resetPre()"><i
+                      class="fa fa-refresh"></i>&nbsp;重置</a>
+              <a class="btn btn-danger btn-rounded btn-sm" onclick="batchDelComment()">
+                <i class="fa fa-remove"></i> 删除
+              </a>
             </li>
+
           </ul>
         </div>
       </form>
@@ -48,6 +53,10 @@
       columns: [{
         checkbox: true
       },
+        {
+          field: 'id',
+          title: '评论编号'
+        },
         {
           field: 'userName',
           title: '用户名',
@@ -101,15 +110,29 @@
   /* 停用 */
   function disable(id) {
     $.modal.confirm("确认要停用该评论吗？", function() {
-      $.operate.post(prefix + "/comment/changeStatus", { "id": id, "status": 0 });
+      $.operate.post(prefix + "/comment/changeStatus", {"id": id, "status": 0});
     })
   }
 
   /* 启用 */
   function enable(id) {
-    $.modal.confirm("确认要启用该评论吗？", function() {
-      $.operate.post(prefix + "/comment/changeStatus", { "id": id, "status": 1 });
+    $.modal.confirm("确认要启用该评论吗？", function () {
+      $.operate.post(prefix + "/comment/changeStatus", {"id": id, "status": 1});
     })
+  }
+
+  // 批量删除评论
+  function batchDelComment() {
+    var rows = $.table.selectColumns("id");
+    if (rows.length == 0) {
+      $.modal.alertWarning("请选择要删除的评论");
+      return;
+    }
+    $.modal.confirm("确认要强退选中的" + rows.length + "条数据吗?", function () {
+      var url = prefix + "/batchDelComment";
+      var data = {"ids": rows.join()};
+      $.operate.post(url, data);
+    });
   }
 
 </script>

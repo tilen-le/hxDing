@@ -156,5 +156,13 @@ public class BookServiceImpl implements IBookService {
         return bookCommentMapper.countByBookId(bookId);
     }
 
+    @Override
+    public void batchDelComment(List<Integer> commentIds) {
+        for (Integer commentId : commentIds) {
+            bookCommentMapper.deleteByPrimaryKey(commentId);
+        }
+
+    }
+
 
 }

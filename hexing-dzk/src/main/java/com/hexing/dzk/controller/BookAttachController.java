@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -341,10 +342,25 @@ public class BookAttachController extends BaseController {
         try {
             n = bookService.addBookComment(bookComment);
             List<BookComment> list = bookService.getAllComment(Integer.valueOf(bookId));
-            return AjaxResult.success("成功添加"+n+"条评论",list);
+            return AjaxResult.success("成功添加" + n + "条评论", list);
         } catch (NumberFormatException e) {
             throw new BaseException(e.getMessage());
         }
     }
+
+    @PostMapping("/batchDelComment")
+    @ResponseBody
+    public AjaxResult batchDelComment(@RequestParam("ids") List<Integer> ids) {
+        try {
+            if (CollectionUtils.isEmpty(ids)) {
+                return AjaxResult.error("评论编号不能为null");
+            }
+            bookService.batchDelComment(ids);
+        } catch (Exception e) {
+            throw new BaseException(e.getMessage());
+        }
+        return AjaxResult.success();
+    }
+
 
 }
