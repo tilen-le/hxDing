@@ -239,20 +239,21 @@ public class BookAttachController extends BaseController {
         }
         //用户是否为当前期刊点赞标识
         Boolean praiseMark = bookService.praiseMark(Long.parseLong(userId), Integer.parseInt(id));
+        Integer countComment = bookService.countBookComment(Integer.parseInt(id));
         //返回数据
         Map<String,Object> map = new HashMap<>();
         map.put("num",Num);
         map.put("praiseMark",praiseMark);
         map.put("userId",userId);
         map.put("name",name);
+        map.put("countComment",countComment);
         return AjaxResult.success(map);
     }
 
     @GetMapping("/thumbsUp")
     @ResponseBody
     public AjaxResult thumbsUp(HttpServletRequest request,Boolean flag) {
-        HttpSession session = request.getSession();
-        String bookId = request.getParameter("bookId");
+        String bookId = request.getParameter("id");
         String userId = request.getParameter("userId");
         BookPraise bookPraise = new BookPraise();
         bookPraise.setBookId(Integer.valueOf(bookId));
@@ -273,10 +274,9 @@ public class BookAttachController extends BaseController {
 
     @PostMapping("/commentList")
     @ResponseBody
-    public TableDataInfo list(HttpServletRequest request) {
-        String bookId = request.getParameter("id");
+    public TableDataInfo list(BookComment bookComment) {
         startPage();
-        List<BookComment> list = bookService.getAllComment(Integer.valueOf(bookId));
+        List<BookComment> list = bookService.getAllComment(bookComment);
         return getDataTable(list);
     }
 

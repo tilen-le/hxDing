@@ -66,41 +66,31 @@
             color: #696c6e;
         }
         .user-remarks-content {
-            width: 840px;
+            width: 340px;
             height: 10vh;
             line-height: 10vh;
             background: #efeff1;
             border-radius: 5px;
             box-shadow: #dddddd;
         }
-        .content-p-head {
-            height: 5vh;
-            line-height: 5vh;
-            margin: 0px 0px 0px;
-        }
-        .content-p-body {
-            height: 5vh;
-            line-height: 5vh;
-            margin: 0px 0px 0px;
+        .comment_content {
+            margin-top:10px;
+            font-size:16px;
+            padding-left: 60px;
         }
 
-        .content-p-head>span {
-            font-family: 黑体;
-            font-size: 18px;
-            color: #0c0c0c;
-            padding-left: 4vw;
+        .imgdiv{
+            float:left;
         }
-
-        .content-p-body>span {
-            font-family: 黑体;
-            font-size: 12px;
-            color: #7c7a7a;
+        .imgcss {
+            width:50px;
+            height:50px;
         }
-
-        .content-p-head>button {
-            width: 4vw;
-            height: 4vh;
-            background-color: #bbbbe7;
+        .comment_name {
+            margin-left:10px;
+            color:#3D9EEA;
+            font-size:15px;
+            font-weight: bolder;
         }
 
         .Input_Box {
@@ -143,7 +133,7 @@
         }
         .postBtn:hover {
             color: #333;
-            background-color: #f33232;
+            background-color: #595454;
         }
         .postBtn:active {
             padding: 10px 20px 6px 20px;
@@ -169,6 +159,7 @@
 
             <div class="user-forum-thumbs">
                 <div style="width: 340px;height: 3vh;margin-top: 2vh">
+                    <span style="float: left" id="countComment" ></span>
                     <a href="#thumbs-o-up" id="up" onclick="thumbUpClock()" style="height: 3vh;float: right;margin-right: 4vh;line-height: 3vh"><i class="fa fa-thumbs-o-up"></i></a>
                     <a href="#thumbs-up" id="down" onclick="thumbUpClock()" style="height: 3vh;float: right;margin-right: 4vh;line-height: 3vh"><i class="fa fa-thumbs-up"></i></a>
                 </div>
@@ -178,13 +169,11 @@
             </div>
             <div class="user-content-solid"></div>
 
-            <div style="width: 340px;height: 8vh" id="openspeekShow"><button id="openspeek" class="commentBotton">写下你的留言</button></div>
-            <div class="Input_Box" id="input" style="display: none">
-                <textarea class="Input_text" id="inputText" placeholder="描述不能超过200个字！"
+            <div class="Input_Box" id="input" >
+                <textarea class="Input_text" id="inputText" placeholder="写下你的留言"
                           maxlength="200" οnchange="this.value=this.value.substring(0, 200)"
                           οnkeydοwn="this.value=this.value.substring(0, 200)"
-                          οnkeyup="this.value=this.value.substring(0, 200)">
-                </textarea>
+                          οnkeyup="this.value=this.value.substring(0, 200)"></textarea>
                 <div class="Input_Foot"> <a class="imgBtn" href="javascript:void(0);"></a><a class="postBtn" onclick="addDiv()">确定</a> </div>
             </div>
 
@@ -222,6 +211,7 @@
         //     }
 
         })
+
         /**
          * 初始化
          * @param data
@@ -238,7 +228,6 @@
                     onSuccess: function(result) {
                         data.code=result.code;
                         // addAccessRecords(data);
-
                     },
                     onFail : function(err) {
                         // $.modal.msgError("请在钉钉中打开该页面");
@@ -266,6 +255,7 @@
                         console.log(window.userId)
                         window.userId = result.data.userId;
                         window.userName = result.data.name;
+                        document.getElementById("countComment").innerHTML ="评论总数："+result.data.countComment;
                         document.getElementById("num").innerHTML = result.data.num;
                         if (!show){
                             document.getElementById("up").style.display = "block";
@@ -296,7 +286,7 @@
                     if (result.code==0){
                         console.log(result.msg)
                         var commentList = result.data
-                        drowComment(commentList)
+                        drowComment2(commentList)
                     }else {
                         console.log(result.msg)
                     }
@@ -351,32 +341,23 @@
         /**
          * 评论
          */
-        $(document).ready(function() {
-            $("#openspeek").click(function() {
-                document.getElementById("input").style.display = "block";
-                document.getElementById("openspeekShow").style.display = "none";
-            });
-        });
-
         function addDiv() {
             var commentList = []
-            var txt4 = document.getElementById('inputText').value;
-            if (txt4 == '' || txt4 == ' ') {
+            var txt = document.getElementById('inputText').value;
+            if (txt == '' || txt == ' ') {
                 alert('请输入评论内容！');
-                document.getElementById("input").style.display = "none";
-                document.getElementById("openspeekShow").style.display = "block";
             }else {
                 $.ajax({
                     type: "Post",
                     cache: false,
                     url: "/dzk/ebook/attach/addComment?id="+id+"&userId="+window.userId+"&userName="+window.userName,
-                    data: {"comment":txt4},
+                    data: {"comment":txt},
                     dataType: "json",
                     success: function (result) {
                         if (result.code==0){
                             console.log(result.msg)
                             commentList = result.data
-                            drowComment(commentList)
+                            drowComment2(commentList)
                         }else {
                             console.log(result.msg)
                         }
@@ -391,35 +372,19 @@
          * 评论列表
          * @param commentList
          */
-        function drowComment(commentList){
+        function drowComment2(commentList){
             document.getElementById("addcontent").innerHTML =null;
             for (let list of commentList){
                 // 添加节点嵌套
-                var node = document.createElement('div');
-                var txt1 = document.createElement("p");
-                var txt2 = document.createElement("span");
-                var txt3 = document.createElement("p");
-                var btn1 = document.createElement('button');
-                var a=document.createElement("a");
-                var txt4 = document.createElement("span");
-                node.className = 'user-remarks-content';
-                txt1.className = 'content-p-head';
-                txt3.className = 'content-p-body';
-                // 插入内容
-                txt4.innerHTML = list.userName+":";
-                txt2.innerHTML = list.comment;
-                a.innerHTML=' <a href="#user" ><i class="fa fa-user"></i></a>';
-                txt3.appendChild(btn1);
-                btn1.appendChild(a);
-                txt3.appendChild(txt4);
-                node.appendChild(txt3);
-                txt1.appendChild(txt2);
-                node.appendChild(txt1);
-                document.getElementById("addcontent").appendChild(node);
+                var s = " ";
+                s += '<div class="comment">';
+                s += '<div class="imgdiv"><img class="imgcss"  src="/dzk/img/dingHead.png"/></div>';
+                s += '<div class="conmment_details">';
+                s +=  '<span class="comment_name">'+list.userName+ '</span>'+'<span style="float: right">'+list.createTime+'</span>';
+                s += 	'<div class="comment_content" >'+list.comment+'</div>';
+                s += 	'</div><hr/></div>';
+                $(s).appendTo($("#addcontent"));
             }
-            document.getElementById("input").style.display = "none";
-            document.getElementById("openspeekShow").style.display = "block";
-            $('#inputText').val('');
         }
     </script>
     </body>

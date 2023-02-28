@@ -1,4 +1,5 @@
 package com.hexing.dzk.mapper;
+import java.util.Date;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
@@ -20,6 +21,10 @@ public interface BookCommentMapper {
     List<BookComment> selectAllByBookId(@Param("bookId")Integer bookId);
 
     Integer countByBookId(@Param("bookId")Integer bookId);
+
+
+    List<BookComment> selectByAll(BookComment bookComment);
+
 
 
 }
