@@ -100,14 +100,14 @@
 
   /* 停用 */
   function disable(id) {
-    $.modal.confirm("确认要停用该电子刊吗？", function() {
+    $.modal.confirm("确认要停用该评论吗？", function() {
       $.operate.post(prefix + "/comment/changeStatus", { "id": id, "status": 0 });
     })
   }
 
   /* 启用 */
   function enable(id) {
-    $.modal.confirm("确认要启用该电子刊吗？", function() {
+    $.modal.confirm("确认要启用该评论吗？", function() {
       $.operate.post(prefix + "/comment/changeStatus", { "id": id, "status": 1 });
     })
   }
