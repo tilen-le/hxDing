@@ -226,16 +226,17 @@
                     corpId: "ding389cf0d9a2e1cc2f",//线上
                     // corpId: "dingdab143b5a957258df2c783f7214b6d69",//测试
                     onSuccess: function(result) {
-                        data.code=result.code;
+                        data.code = result.code;
                         // addAccessRecords(data);
+                        getCode(data)
+                        getAllComment(data.id)
                     },
                     onFail : function(err) {
                         // $.modal.msgError("请在钉钉中打开该页面");
                     }
                 });
             });
-            getCode(data)
-            getAllComment(data.id)
+
         }
 
         /**
@@ -373,7 +374,8 @@
          * @param commentList
          */
         function drowComment2(commentList){
-            document.getElementById("addcontent").innerHTML =null;
+            document.getElementById('inputText').value = "";
+            document.getElementById("addcontent").innerHTML = null;
             for (let list of commentList){
                 // 添加节点嵌套
                 var s = " ";

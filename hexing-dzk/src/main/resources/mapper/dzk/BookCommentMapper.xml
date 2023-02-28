@@ -147,9 +147,9 @@
     from book_comment
     <where>
       <if test="userName != null and userName != ''">
-        and user_name like concat('%', #{userName}, '%')
+         AND user_name like concat('%', #{userName}, '%'),
       </if>
-      <if test="status != null and status != ''">
+      <if test="status != null and userName != ''">
         and `status`=#{status,jdbcType=VARCHAR}
       </if>
     </where>

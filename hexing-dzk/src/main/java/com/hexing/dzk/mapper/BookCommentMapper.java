@@ -22,9 +22,6 @@ public interface BookCommentMapper {
 
     Integer countByBookId(@Param("bookId")Integer bookId);
 
-
     List<BookComment> selectByAll(BookComment bookComment);
-
-
 
 }

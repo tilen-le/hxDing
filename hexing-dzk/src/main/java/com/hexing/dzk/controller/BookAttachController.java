@@ -234,14 +234,14 @@ public class BookAttachController extends BaseController {
         session.setAttribute("bookId",id);
         if (StringUtils.isEmpty(userId) || StringUtils.isEmpty(name)){
             //如果session中没有 则调钉钉接口获取用户信息
-//            HashMap<String,String> map = GetUserMsg.getUserid(key,appsecret,code);
+            HashMap<String, String> map = GetUserMsg.getUserid(key, appsecret, code);
             //把用户信息放到session中后减少钉钉接口调用
-//            userId=map.get("userId");
-//            name=map.get("name");
-            userId = "80015801";
-            name = "徐乐乐(80015801)";
-            session.setAttribute("userId",userId);
-            session.setAttribute("name",name);
+            userId = map.get("userId");
+            name = map.get("name");
+//            userId = "80015801";
+//            name = "徐乐乐(80015801)";
+            session.setAttribute("userId", userId);
+            session.setAttribute("name", name);
         }
         //用户是否为当前期刊点赞标识
         Boolean praiseMark = bookService.praiseMark(Long.parseLong(userId), Integer.parseInt(id));
@@ -280,8 +280,11 @@ public class BookAttachController extends BaseController {
 
     @PostMapping("/commentList")
     @ResponseBody
-    public TableDataInfo list(BookComment bookComment) {
+    public TableDataInfo list(BookCommentMsg bookCommentMsg) {
         startPage();
+        BookComment bookComment = new BookComment();
+        bookComment.setUserName(bookCommentMsg.getName());
+        bookComment.setStatus(bookCommentMsg.getStatus());
         List<BookComment> list = bookService.getAllComment(bookComment);
         return getDataTable(list);
     }
