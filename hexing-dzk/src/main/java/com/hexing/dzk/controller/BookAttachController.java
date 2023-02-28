@@ -228,33 +228,24 @@ public class BookAttachController extends BaseController {
         String code = request.getParameter("code");
         //查询期刊点赞数量
         int Num = bookService.countBookPraise(Integer.parseInt(id));
-        //判断session中是否有用户信息
-        HttpSession session = request.getSession();
-        String userId= (String) session.getAttribute("userId");
-        String name= (String) session.getAttribute("name");
-        session.setAttribute("bookId",id);
-        if (StringUtils.isEmpty(userId) || StringUtils.isEmpty(name)){
-            //如果session中没有 则调钉钉接口获取用户信息
-            HashMap<String, String> map = GetUserMsg.getUserid(key, appsecret, code);
-            //把用户信息放到session中后减少钉钉接口调用
-            userId = map.get("userId");
-            name = map.get("name");
-//            userId = "80015801";
-//            name = "徐乐乐(80015801)";
-            session.setAttribute("userId", userId);
-            session.setAttribute("name", name);
-        }
+        //如果session中没有 则调钉钉接口获取用户信息
+        HashMap<String, String> map = GetUserMsg.getUserid(key, appsecret, code);
+        //把用户信息放到session中后减少钉钉接口调用
+        String userId = map.get("userId");
+        String name = map.get("name");
+//          String userId = "80015801";
+//          String name = "徐乐乐(80015801)";
         //用户是否为当前期刊点赞标识
         Boolean praiseMark = bookService.praiseMark(Long.parseLong(userId), Integer.parseInt(id));
         Integer countComment = bookService.countBookComment(Integer.parseInt(id));
         //返回数据
-        Map<String,Object> map = new HashMap<>();
-        map.put("num",Num);
-        map.put("praiseMark",praiseMark);
-        map.put("userId",userId);
-        map.put("name",name);
-        map.put("countComment",countComment);
-        return AjaxResult.success(map);
+        Map<String, Object> maplist = new HashMap<>();
+        maplist.put("num", Num);
+        maplist.put("praiseMark", praiseMark);
+        maplist.put("userId", userId);
+        maplist.put("name", name);
+        maplist.put("countComment", countComment);
+        return AjaxResult.success(maplist);
     }
 
     @GetMapping("/thumbsUp")
@@ -281,9 +272,10 @@ public class BookAttachController extends BaseController {
 
     @PostMapping("/commentList")
     @ResponseBody
-    public TableDataInfo list(BookCommentMsg bookCommentMsg) {
+    public TableDataInfo list(HttpServletRequest request, BookCommentMsg bookCommentMsg) {
         startPage();
         BookComment bookComment = new BookComment();
+        bookComment.setBookId(Integer.valueOf(request.getParameter("id")));
         bookComment.setUserName(bookCommentMsg.getName());
         bookComment.setStatus(bookCommentMsg.getStatus());
         List<BookComment> list = bookService.getAllComment(bookComment);
@@ -333,16 +325,19 @@ public class BookAttachController extends BaseController {
         bookComment.setUserId(Long.valueOf(userId));
         bookComment.setComment(comment);
         Boolean containsSensitiveWords = sensitiveWordFilter.isContainsSensitiveWords(comment,1);
-        if (containsSensitiveWords){
-            bookComment.setStatus("0");
-        }else {
-            bookComment.setStatus("1");
-        }
         int n = 0;
         try {
-            n = bookService.addBookComment(bookComment);
-            List<BookComment> list = bookService.getAllComment(Integer.valueOf(bookId));
-            return AjaxResult.success("成功添加" + n + "条评论", list);
+            if (containsSensitiveWords) {
+                bookComment.setStatus("0");
+                n = bookService.addBookComment(bookComment);
+                List<BookComment> list = bookService.getAllComment(Integer.valueOf(bookId));
+                return AjaxResult.success("评论添加成功，但包含敏感词汇", list);
+            } else {
+                bookComment.setStatus("1");
+                n = bookService.addBookComment(bookComment);
+                List<BookComment> list = bookService.getAllComment(Integer.valueOf(bookId));
+                return AjaxResult.success("成功添加" + n + "信息", list);
+            }
         } catch (NumberFormatException e) {
             throw new BaseException(e.getMessage());
         }

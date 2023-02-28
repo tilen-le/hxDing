@@ -36,25 +36,8 @@
         }
         .user-forum-thumbs {
             width: 100%;
-            height: 8vh;
-            line-height: 8vh;
-        }
-        .commentBotton {
-            width: 340px;
-            height: 8vh;
-            line-height: 8vh;
-            background: #ece9e9;
-            float: left;
-            text-align: left;
-            font-family: '宋体';
-            border-color: #dddddd;
-            border-radius:5px;
-        }
-
-        .user-content-solid {
-            width: 340px;
-            border-bottom: 2px solid #cdcecf;
-            margin-inside: 5px;
+            height: 7vh;
+            line-height: 7vh;
         }
         .goodComment {
             width: 340px;
@@ -74,8 +57,8 @@
             box-shadow: #dddddd;
         }
         .comment_content {
-            margin-top:10px;
-            font-size:16px;
+            margin-top: 8px;
+            font-size: 14px;
             padding-left: 60px;
         }
 
@@ -83,13 +66,14 @@
             float:left;
         }
         .imgcss {
-            width:50px;
-            height:50px;
+            width: 40px;
+            height: 40px;
+            border-radius: 25%;
         }
         .comment_name {
-            margin-left:10px;
-            color:#3D9EEA;
-            font-size:15px;
+            margin-left: 10px;
+            color: #3D9EEA;
+            font-size: 12px;
             font-weight: bolder;
         }
 
@@ -163,11 +147,11 @@
                     <a href="#thumbs-o-up" id="up" onclick="thumbUpClock()" style="height: 3vh;float: right;margin-right: 4vh;line-height: 3vh"><i class="fa fa-thumbs-o-up"></i></a>
                     <a href="#thumbs-up" id="down" onclick="thumbUpClock()" style="height: 3vh;float: right;margin-right: 4vh;line-height: 3vh"><i class="fa fa-thumbs-up"></i></a>
                 </div>
-                <div style="width: 340px;height: 4vh;margin-right: 2vh">
-                    <span id="num" th:text="${num}" style="height: 3vh;float: right ;line-height: 3vh;margin-right: 4vh"></span>
+                <div style="width: 340px;height: 3vh;margin-right: 2vh">
+                    <span id="num" style="height: 3vh;float: right ;line-height: 3vh;margin-right: 4vh"
+                          th:text="${num}"></span>
                 </div>
             </div>
-            <div class="user-content-solid"></div>
 
             <div class="Input_Box" id="input" >
                 <textarea class="Input_text" id="inputText" placeholder="写下你的留言"
@@ -204,7 +188,6 @@
                 if (attach == null || attach.attachUrl == null) {
                     $.modal.msgError("本期刊没有上传内容");
                 }
-                var flag = true;
                 var code = "";
                 var data = {"code":code,"id":id}
                 init(data)
@@ -236,7 +219,6 @@
                     }
                 });
             });
-
         }
 
         /**
@@ -250,18 +232,15 @@
                 dataType: "json",
                 success: function (result) {
                     if (result.code==0){
-                        console.log(result.msg)
-                        let show = result.data.praiseMark;
-                        this.flag = show;
-                        console.log(window.userId)
+                        var flag = result.data.praiseMark;
                         window.userId = result.data.userId;
                         window.userName = result.data.name;
                         document.getElementById("countComment").innerHTML ="评论总数："+result.data.countComment;
                         document.getElementById("num").innerHTML = result.data.num;
-                        if (!show){
+                        if (flag) {
                             document.getElementById("up").style.display = "block";
                             document.getElementById("down").style.display = "none";
-                        }else {
+                        } else {
                             document.getElementById("up").style.display = "none";
                             document.getElementById("down").style.display = "block";
                         }
@@ -285,7 +264,6 @@
                 dataType: "json",
                 success: function (result) {
                     if (result.code==0){
-                        console.log(result.msg)
                         var commentList = result.data
                         drowComment2(commentList)
                     }else {
@@ -305,18 +283,18 @@
         function thumbUpClock() {
             var n = document.getElementById("num");
             // 根据类切换类名
-            if (this.flag) {
+            if (window.flag) {
                 n.innerHTML = parseInt(n.innerHTML) + 1;
-                document.getElementById("up").style.display = "block";
-                document.getElementById("down").style.display = "none";
-                this.flag = false;
-                thumbsUp(flag)
-            } else {
-                n.innerHTML = parseInt(n.innerHTML) - 1;
                 document.getElementById("up").style.display = "none";
                 document.getElementById("down").style.display = "block";
-                this.flag = true;
-                thumbsUp(flag)
+                window.flag = false;
+                thumbsUp(window.flag)
+            } else {
+                n.innerHTML = parseInt(n.innerHTML) - 1;
+                document.getElementById("up").style.display = "block";
+                document.getElementById("down").style.display = "none";
+                window.flag = true;
+                thumbsUp(window.flag)
             }
         };
         function thumbsUp(flag) {
@@ -346,7 +324,8 @@
             var commentList = []
             var txt = document.getElementById('inputText').value;
             if (txt == '' || txt == ' ') {
-                alert('请输入评论内容！');
+                $.modal.alertError('请输入评论内容！');
+                // alert('请输入评论内容！');
             }else {
                 $.ajax({
                     type: "Post",
@@ -355,8 +334,10 @@
                     data: {"comment":txt},
                     dataType: "json",
                     success: function (result) {
-                        if (result.code==0){
-                            console.log(result.msg)
+                        if (result.code==0) {
+                            if (result.msg == "评论添加成功，但包含敏感词汇") {
+                                $.modal.alertError('评论添加成功，但包含敏感词汇,不予显示');
+                            }
                             commentList = result.data
                             drowComment2(commentList)
                         }else {
@@ -374,7 +355,7 @@
          * @param commentList
          */
         function drowComment2(commentList){
-            document.getElementById('inputText').value = "";
+            document.getElementById("inputText").value = "";
             document.getElementById("addcontent").innerHTML = null;
             for (let list of commentList){
                 // 添加节点嵌套

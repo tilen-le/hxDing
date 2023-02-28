@@ -1,4 +1,5 @@
 package com.hexing.dzk.mapper;
+import java.util.Date;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
@@ -18,13 +19,14 @@ public interface BookPraiseMapper {
     int updateByPrimaryKey(BookPraise record);
 
 
-    Integer countByBookId(@Param("bookId")Integer bookId);
+    Integer countByBookId(@Param("bookId") Integer bookId);
 
-    List<BookPraise> selectByUserIdAndBookId(@Param("userId")Long userId,@Param("bookId")Integer bookId);
+    List<BookPraise> selectByUserIdAndBookId(@Param("userId") Long userId, @Param("bookId") Integer bookId);
 
 
-    int deleteByBookIdAndUserId(@Param("userId")Long userId,@Param("bookId")Integer bookId);
+    int deleteByBookIdAndUserId(@Param("userId") Long userId, @Param("bookId") Integer bookId);
 
+    List<BookPraise> selectByAll(BookPraise bookPraise);
 
 
 }

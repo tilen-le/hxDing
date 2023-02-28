@@ -41,23 +41,6 @@
             height: 8vh;
             line-height: 8vh;
         }
-        .commentBotton {
-            width: 840px;
-            height: 8vh;
-            line-height: 8vh;
-            background: #ece9e9;
-            float: left;
-            text-align: left;
-            font-family: '宋体';
-            border-color: #dddddd;
-            border-radius:5px;
-        }
-
-        .user-content-solid {
-            width: 840px;
-            border-bottom: 2px solid #cdcecf;
-            margin-inside: 5px;
-        }
         .goodComment {
             width: 840px;
             height: 30px;
@@ -127,9 +110,9 @@
             float:left;
         }
         .imgcss {
-            width:50px;
-            height:50px;
-            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            border-radius: 25%;
         }
         .comment_name {
             margin-left:10px;
@@ -161,7 +144,7 @@
                     <span id="num" th:text="${num}" style="height: 4vh;float: right ;line-height: 4vh;margin-right: 4vh"></span>
                 </div>
             </div>
-            <div class="user-content-solid"></div>
+            <!--            <div class="user-content-solid"></div>-->
             <div class="Input_Box" id="input" >
                 <textarea class="Input_text" id="inputText" placeholder="写下你的留言"
                           maxlength="200" οnchange="this.value=this.value.substring(0, 200)"
@@ -240,13 +223,12 @@
                 dataType: "json",
                 success: function (result) {
                     if (result.code==0){
-                        console.log(result.msg)
                         var flag = result.data.praiseMark;
                         window.userId = result.data.userId;
                         window.userName = result.data.name;
                         document.getElementById("countComment").innerHTML ="评论总数："+result.data.countComment;
                         document.getElementById("num").innerHTML = result.data.num;
-                        if (!flag) {
+                        if (flag) {
                             document.getElementById("up").style.display = "block";
                             document.getElementById("down").style.display = "none";
                         } else {
@@ -273,7 +255,6 @@
                 dataType: "json",
                 success: function (result) {
                     if (result.code==0){
-                        console.log(result.msg)
                         var commentList = result.data
                         drowComment2(commentList)
                     }else {
@@ -334,7 +315,8 @@
             var commentList = []
             var txt = document.getElementById('inputText').value;
             if (txt == '' || txt == ' ') {
-                alert('请输入评论内容！');
+                $.modal.alertError('请输入评论内容！');
+                // alert('请输入评论内容！');
             }else {
                 $.ajax({
                     type: "Post",
@@ -343,8 +325,10 @@
                     data: {"comment":txt},
                     dataType: "json",
                     success: function (result) {
-                        if (result.code==0){
-                            console.log(result.msg)
+                        if (result.code==0) {
+                            if (result.msg == "评论添加成功，但包含敏感词汇") {
+                                $.modal.alertError('评论添加成功，但包含敏感词汇,不予显示');
+                            }
                             commentList = result.data
                             drowComment2(commentList)
                         }else {
