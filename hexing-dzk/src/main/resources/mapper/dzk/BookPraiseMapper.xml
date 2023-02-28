@@ -31,7 +31,7 @@
     <!--@mbg.generated-->
     insert into book_praise (user_id, book_id, create_time, 
       update_time, flag)
-    values (#{userId,jdbcType=BIGINT}, #{bookId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+    values (#{userId,jdbcType=BIGINT}, #{bookId,jdbcType=INTEGER}, now(),
       #{updateTime,jdbcType=TIMESTAMP}, #{flag,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.hexing.dzk.domain.BookPraise" useGeneratedKeys="true">
@@ -44,9 +44,7 @@
       <if test="bookId != null">
         book_id,
       </if>
-      <if test="createTime != null">
         create_time,
-      </if>
       <if test="updateTime != null">
         update_time,
       </if>
@@ -61,9 +59,7 @@
       <if test="bookId != null">
         #{bookId,jdbcType=INTEGER},
       </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
+      createTime=now(),
       <if test="updateTime != null">
         #{updateTime,jdbcType=TIMESTAMP},
       </if>
@@ -82,9 +78,7 @@
       <if test="bookId != null">
         book_id = #{bookId,jdbcType=INTEGER},
       </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
+        create_time = now(),
       <if test="updateTime != null">
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
@@ -99,7 +93,7 @@
     update book_praise
     set user_id = #{userId,jdbcType=BIGINT},
       book_id = #{bookId,jdbcType=INTEGER},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_time = now(),
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       flag = #{flag,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}
