@@ -8,6 +8,8 @@ import com.hexing.common.core.domain.AjaxResult;
 import com.hexing.common.core.domain.entity.SysUser;
 import com.hexing.common.core.page.TableDataInfo;
 import com.hexing.common.enums.BusinessType;
+import com.hexing.common.exception.base.BaseException;
+import com.hexing.common.utils.SensitiveWordFilter;
 import com.hexing.common.utils.ShiroUtils;
 import com.hexing.common.utils.StringUtils;
 import com.hexing.common.utils.bean.BeanUtils;
@@ -15,6 +17,7 @@ import com.hexing.common.utils.file.FileUploadUtils;
 import com.hexing.dzk.domain.*;
 import com.hexing.dzk.service.IBookService;
 import com.hexing.dzk.tool.GetUserMsg;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -57,6 +60,9 @@ public class BookAttachController extends BaseController {
 
     @Value("${token.appsecret}")
     private String appsecret;
+
+    @Autowired
+    private SensitiveWordFilter sensitiveWordFilter;
 
     @PostMapping("/list")
     @ResponseBody
@@ -314,18 +320,27 @@ public class BookAttachController extends BaseController {
         String userId = request.getParameter("userId");
         String userName = request.getParameter("userName");
         String bookId = request.getParameter("id");
+        if (StringUtils.isEmpty(comment)){
+            return AjaxResult.error("评论不能为null");
+        }
         BookComment bookComment = new BookComment();
         bookComment.setBookId(Integer.valueOf(bookId));
         bookComment.setUserName(userName);
         bookComment.setUserId(Long.valueOf(userId));
         bookComment.setComment(comment);
+        Boolean containsSensitiveWords = sensitiveWordFilter.isContainsSensitiveWords(comment,1);
+        if (containsSensitiveWords){
+            bookComment.setStatus("0");
+        }else {
+            bookComment.setStatus("1");
+        }
         int n = 0;
         try {
             n = bookService.addBookComment(bookComment);
             List<BookComment> list = bookService.getAllComment(Integer.valueOf(bookId));
             return AjaxResult.success("成功添加"+n+"条评论",list);
         } catch (NumberFormatException e) {
-            throw new RuntimeException(e);
+            throw new BaseException(e.getMessage());
         }
     }
 
