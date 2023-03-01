@@ -120,26 +120,35 @@
 					{
 						field: 'praiseNum',
 						title: '点赞数',
-						align: 'center',
-					},
-					{
-						field: 'commentNum',
-						title: '评论数',
-						align: 'center',
-						formatter: function (value, row, index) {
-							return commentTools(row);
-						}
-					},
-					{
-						field: 'createTime',
-						title: '创建时间',
-						sortable: true
-					},
-					{
-						field: 'updateTime',
-						title: '更新时间',
-						sortable: true
-					},
+                        align: 'center',
+                    },
+                    {
+                        field: 'commentNum',
+                        title: '评论数',
+                        align: 'center',
+                        formatter: function (value, row, index) {
+                            return commentTools(row);
+                        }
+                    },
+                    {
+                        visible: editFlag == 'hidden' ? false : true,
+                        title: '评论状态',
+                        align: 'center',
+                        sortable: true,
+                        formatter: function (value, row, index) {
+                            return enableCommentTools(row);
+                        }
+                    },
+                    {
+                        field: 'createTime',
+                        title: '创建时间',
+                        sortable: true
+                    },
+                    {
+                        field: 'updateTime',
+                        title: '更新时间',
+                        sortable: true
+                    },
 					{
 						title: '操作',
 						align: 'center',
@@ -167,26 +176,36 @@
 		    $.operate.add(bookId);
 		}
 
-		function resetPre() {
-			$.form.reset();
-		}
-		function statusTools(row) {
-			if (row.status == 0) {
-				return '<i class=\"fa fa-toggle-off text-info fa-2x\" onclick="enable(\'' + row.id + '\')"></i> ';
-			} else {
-				return '<i class=\"fa fa-toggle-on text-info fa-2x\" onclick="disable(\'' + row.id + '\')"></i> ';
-			}
-		}
-		function attachTools(row) {
-			if (row.attachUrl != null) {
-				return '<a onclick="downloadAttach(\'' + row.attachUrl +'\')">'+ row.attachName +'</a> ';
-			}
-		}
+        function resetPre() {
+            $.form.reset();
+        }
 
-		function commentTools(row) {
-			if (row.commentNum != null) {
-				return '<a onclick="comment(\'' + row.id +'\')">'+ row.commentNum +'</a> ';
-			}
+        function statusTools(row) {
+            if (row.status == 0) {
+                return '<i class=\"fa fa-toggle-off text-info fa-2x\" onclick="enable(\'' + row.id + '\')"></i> ';
+            } else {
+                return '<i class=\"fa fa-toggle-on text-info fa-2x\" onclick="disable(\'' + row.id + '\')"></i> ';
+            }
+        }
+
+        function enableCommentTools(row) {
+            if (row.enableComment == 0) {
+                return '<i class=\"fa fa-toggle-off text-info fa-2x\" onclick="enableComment(\'' + row.id + '\')"></i> ';
+            } else {
+                return '<i class=\"fa fa-toggle-on text-info fa-2x\" onclick="disableComment(\'' + row.id + '\')"></i> ';
+            }
+        }
+
+        function attachTools(row) {
+            if (row.attachUrl != null) {
+                return '<a onclick="downloadAttach(\'' + row.attachUrl + '\')">' + row.attachName + '</a> ';
+            }
+        }
+
+        function commentTools(row) {
+            if (row.commentNum != null) {
+                return '<a onclick="comment(\'' + row.id + '\')">' + row.commentNum + '</a> ';
+            }
 		}
 		function comment(id) {
 			var url = prefix + '/comment/' + id;
@@ -204,26 +223,40 @@
 		/* 停用 */
 		function disable(id) {
 			$.modal.confirm("确认要停用该期刊吗？", function() {
-				$.operate.post(prefix + "/changeStatus", { "id": id, "status": 0 });
-			})
-		}
+                $.operate.post(prefix + "/changeStatus", {"id": id, "status": 0});
+            })
+        }
 
-		/* 启用 */
-		function enable(id) {
-			$.modal.confirm("确认要启用该期刊吗？", function() {
-				$.operate.post(prefix + "/changeStatus", { "id": id, "status": 1 });
-			})
-		}
-		function avatar(id) {
-			var url = prefix + '/uploadAttachCover?id=' + id;
-			layer.open({
-				type: 1,
-				area: [500 + 'px', 300 + 'px'],
-				fix: false,
-				//不固定
-				maxmin: true,
-				shade: 0.3,
-				title: '上传封面',
+        /* 启用 */
+        function enable(id) {
+            $.modal.confirm("确认要停用评论功能吗？", function () {
+                $.operate.post(prefix + "/changeStatus", {"id": id, "status": 1});
+            })
+        }
+
+        function disableComment(id) {
+            $.modal.confirm("确认要启用该期刊吗？", function () {
+                $.operate.post(prefix + "/changeEnableComment", {"id": id, "enableComment": 0});
+            })
+        }
+
+        /* 启用 */
+        function enableComment(id) {
+            $.modal.confirm("确认要启用评论功能吗？", function () {
+                $.operate.post(prefix + "/changeEnableComment", {"id": id, "enableComment": 1});
+            })
+        }
+
+        function avatar(id) {
+            var url = prefix + '/uploadAttachCover?id=' + id;
+            layer.open({
+                type: 1,
+                area: [500 + 'px', 300 + 'px'],
+                fix: false,
+                //不固定
+                maxmin: true,
+                shade: 0.3,
+                title: '上传封面',
 				content: $('#importTpl').html(),
 				btn: ['<i class="fa fa-check"></i> 导入', '<i class="fa fa-remove"></i> 取消'],
 				// 弹层外区域关闭

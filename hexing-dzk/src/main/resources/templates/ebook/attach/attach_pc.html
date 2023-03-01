@@ -155,7 +155,7 @@
                           οnkeyup="this.value=this.value.substring(0, 200)"></textarea>
                 <div class="Input_Foot"> <a class="imgBtn" href="javascript:void(0);"></a><a class="postBtn" onclick="addDiv()">确定</a> </div>
             </div>
-            <div style="margin-top: 10px">
+            <div id="commentMsg" style="margin-top: 10px">
                 <H4 class="goodComment">全部评论</H4>
                 <div class="user-remarks-addcontent" id="addcontent"></div>
             </div>
@@ -179,13 +179,18 @@
             //     alert("请用钉钉打开！");
             //     return;
             // } else {
-                $('#dataDiv').show();
-                var attach = [[${attach}]];
-                if (attach == null || attach.attachUrl == null) {
-                    $.modal.msgError("本期刊没有上传内容");
-                }
-                var data = {"code":null,"id":id}
-                init(data)
+            $('#dataDiv').show();
+            var attach = [[${attach}]];
+            if (attach == null || attach.attachUrl == null) {
+                $.modal.msgError("本期刊没有上传内容");
+            }
+            if (attach == null || attach.enableComment == 0) {
+                $('#input').hide();
+                $('#commentMsg').hide();
+                $('#countComment').hide();
+            }
+            var data = {"code": null, "id": id}
+            init(data)
             // }
         })
 

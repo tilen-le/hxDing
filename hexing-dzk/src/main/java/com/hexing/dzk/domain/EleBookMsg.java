@@ -26,7 +26,8 @@ public class EleBookMsg extends BaseEntity {
 
     private Integer commentNum;
 
-
     private int sorted;
+
+    private String enableComment;
 
 }

@@ -27,6 +27,8 @@ public class BookAttach extends BaseEntity {
 
     private int sorted;
 
+    private String enableComment;
+
     public int getId() {
         return id;
     }
@@ -107,6 +109,14 @@ public class BookAttach extends BaseEntity {
         this.coverName = coverName;
     }
 
+    public String getEnableComment() {
+        return enableComment;
+    }
+
+    public void setEnableComment(String enableComment) {
+        this.enableComment = enableComment;
+    }
+
     @Override
     public String toString() {
         return "BookAttach{" +
@@ -119,7 +129,8 @@ public class BookAttach extends BaseEntity {
                 ", coverUrl='" + coverUrl + '\'' +
                 ", coverName='" + coverName + '\'' +
                 ", status='" + status + '\'' +
-                ", sorted=" + sorted +
+                ", sorted=" + sorted + '\'' +
+                ", enableComment=" + enableComment +
                 '}';
     }
 }

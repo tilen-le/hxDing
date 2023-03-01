@@ -90,6 +90,13 @@ public class BookAttachController extends BaseController {
         return toAjax(bookService.changeStatus(bookAttach));
     }
 
+    @Log(title = "期刊评论管理", businessType = BusinessType.UPDATE)
+    @PostMapping("/changeEnableComment")
+    @ResponseBody
+    public AjaxResult changeEnableComment(BookAttach bookAttach) {
+        return toAjax(bookService.changeStatus(bookAttach));
+    }
+
     @Log(title = "期刊管理", businessType = BusinessType.DELETE)
     @PostMapping("/remove")
     @ResponseBody
