@@ -45,7 +45,6 @@
             width: 840px;
             height: 30px;
             line-height: 30px;
-            background: #efeff1;
             text-align: left;
             font-family: Helvetica;
             color: #696c6e;
@@ -66,32 +65,37 @@
             -moz-border-radius: 5px;
             -webkit-border-radius: 5px;
             border-radius: 5px;
+            overflow: scroll;
         }
+
+        .Input_Box > textarea::-webkit-scrollbar {
+            display: none;
+        }
+
         .Input_Foot {
             width: 840px;
             height: 35px;
-            border-top: 1px solid #ccc;
-            background-color: #fff;
+
             -moz-border-radius: 0 0 5px 5px;
             -webkit-border-radius: 0 0 5px 5px;
             border-radius: 0 0 5px 5px;
             position: absolute;
         }
+
         .postBtn {
             float: right;
             font: 13px “微软雅黑”, Arial, Helvetica, sans-serif;
             color: #808080;
             padding: 9px 20px 7px 20px;
-            border-left: 1px solid #ccc;
             cursor: pointer;
             -moz-border-radius: 0 0 5px 0;
             -webkit-border-radius: 0 0 5px 0;
-            border-radius: 0 0 5px 0;
+            border-radius: 5px;
             background-color: #e4e9ec;
         }
         .postBtn:hover {
-            color: #333;
-            background-color: #817e7e;
+            color: #f6f8f6;
+            background-color: #44dc30;
         }
         .postBtn:active {
             padding: 10px 20px 6px 20px;
@@ -135,14 +139,13 @@
         <div style="width: 840px;margin: auto;">
             <img class="imgContain" th:src="@{${attach.attachUrl}}">
             <div class="user-forum-thumbs">
-                <div style="width: 840px;height: 3vh;margin-top: 2vh">
-                    <span style="float: left" id="countComment" ></span>
-                    <a href="#thumbs-o-up" id="up" onclick="thumbUpClock()" style="height: 3vh;float: right;margin-right: 4vh;line-height: 3vh"><i class="fa fa-thumbs-o-up"></i></a>
-                    <a href="#thumbs-up" id="down" onclick="thumbUpClock()" style="height: 3vh;float: right;margin-right: 4vh;line-height: 3vh"><i class="fa fa-thumbs-up"></i></a>
-                </div>
-                <div style="width: 840px;height: 5vh;margin-right: 2vh">
-                    <span id="num" th:text="${num}" style="height: 4vh;float: right ;line-height: 4vh;margin-right: 4vh"></span>
-                </div>
+                <span id="countComment" style="float: left"></span>
+                <a href="#thumbs-o-up" id="up" onclick="thumbUpClock()"
+                   style="float: right;margin-right: 4vh;line-height: 8vh"><i class="fa fa-thumbs-o-up"></i><span
+                        id="num" style="padding-left: 5px"></span></a>
+                <a href="#thumbs-up" id="down" onclick="thumbUpClock()"
+                   style="float: right;margin-right: 4vh;line-height: 8vh"><i class="fa fa-thumbs-up"></i><span
+                        id="num2" style="padding-left: 5px"></span></a>
             </div>
             <!--            <div class="user-content-solid"></div>-->
             <div class="Input_Box" id="input" >
@@ -210,8 +213,6 @@
                     }
                 });
             });
-            getCode(data)
-            getAllComment(data.id)
         }
 
         /**
@@ -229,11 +230,14 @@
                         window.userId = result.data.userId;
                         window.userName = result.data.name;
                         document.getElementById("countComment").innerHTML ="评论总数："+result.data.countComment;
-                        document.getElementById("num").innerHTML = result.data.num;
                         if (flag) {
+                            document.getElementById("num").innerHTML = result.data.num;
+                            document.getElementById("num2").innerHTML = result.data.num + 1;
                             document.getElementById("up").style.display = "block";
                             document.getElementById("down").style.display = "none";
                         } else {
+                            document.getElementById("num2").innerHTML = result.data.num;
+                            document.getElementById("num").innerHTML = result.data.num - 1;
                             document.getElementById("up").style.display = "none";
                             document.getElementById("down").style.display = "block";
                         }
@@ -274,16 +278,13 @@
          */
 
         function thumbUpClock() {
-            var n = document.getElementById("num");
             // 根据类切换类名
             if (window.flag) {
-                n.innerHTML = parseInt(n.innerHTML) + 1;
                 document.getElementById("up").style.display = "none";
                 document.getElementById("down").style.display = "block";
                 window.flag = false;
                 thumbsUp(window.flag)
-            } else if (window.flag != true && n > 0) {
-                n.innerHTML = parseInt(n.innerHTML) - 1;
+            } else {
                 document.getElementById("up").style.display = "block";
                 document.getElementById("down").style.display = "none";
                 window.flag = true;
