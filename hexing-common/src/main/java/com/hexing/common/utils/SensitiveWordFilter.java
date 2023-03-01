@@ -101,7 +101,7 @@ public class SensitiveWordFilter implements ApplicationRunner {
         if(txt == null || "".equals(txt)){
             return false;
         }
-        txt = txt.replace(" ","");
+        txt = txt.replace(" ","").toLowerCase();
         for(int i = 0; i < txt.length();i++){
             Integer matchFlag = checkSensitiveWords(txt, i , matchType);
             if(matchFlag > 0){
@@ -125,7 +125,7 @@ public class SensitiveWordFilter implements ApplicationRunner {
         //匹配标识数默认为0
         Integer matchFlag = 0;
         Map childMap = sensitiveWordsMap;
-        txt = txt.replace(" ","");
+        txt = txt.replace(" ","").toLowerCase();
         for(int i = start;i < txt.length();i++){
             word = txt.charAt(i);
             childMap = (Map)childMap.get(word);
@@ -158,7 +158,7 @@ public class SensitiveWordFilter implements ApplicationRunner {
      * @return
      */
     public static Set<String> getSensitiveWords(String txt,Integer matchType) {
-        txt = txt.replace(" ","");
+        txt = txt.replace(" ","").toLowerCase();
         Set<String> sensitiveWords = new HashSet<>();
         for(int i = 0;i < txt.length();i++) {
             Integer length = checkSensitiveWords(txt, i, matchType);
