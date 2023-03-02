@@ -18,7 +18,7 @@ import java.util.*;
 @Component
 public class SensitiveWordFilter implements ApplicationRunner {
 
-    private static final String filePath = "/dic/sensitive.txt";
+    private static final String filePath = "/data/file/sensitive.txt";
 
     private static Map<String, String> sensitiveWordsMap;
 
@@ -34,11 +34,12 @@ public class SensitiveWordFilter implements ApplicationRunner {
 
 
     private static Set<String> readSensitiveWordsFile() {
-        Resource file = new ClassPathResource(filePath);
+//        Resource file = new ClassPathResource(filePath);
+        File file = new File(filePath);
         Set<String> result = new HashSet<>();
         BufferedReader br = null;
         try {
-            br = new BufferedReader(new FileReader(file.getFile()));
+            br = new BufferedReader(new FileReader(file));
             String s = null;
             while ((s = br.readLine()) != null) {
                 result.add(s);
@@ -211,7 +212,7 @@ public class SensitiveWordFilter implements ApplicationRunner {
         Long beginTime = System.currentTimeMillis();
         Set<String> wordList = readSensitiveWordsFile();
         addSensitiveWordsToHashMap(wordList);
-        String txt = " s 是一个sb    ";
+        String txt = "";
         Boolean containsSensitiveWords = isContainsSensitiveWords(txt, 1);
         System.out.println("是否包含: " + containsSensitiveWords);
         Set<String> sensitiveWords = getSensitiveWords(txt, 1);
