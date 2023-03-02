@@ -15,8 +15,7 @@ import java.util.*;
 /**
  * @author 80010641
  */
-@Component
-public class SensitiveWordFilter implements ApplicationRunner {
+public class SensitiveWordFilter {
 
     private static final String filePath = "/data/file/sensitive.txt";
 
@@ -26,8 +25,7 @@ public class SensitiveWordFilter implements ApplicationRunner {
     private static Integer minMatchType = 1;
 
 
-    @Override
-    public void run(ApplicationArguments args) throws Exception {
+    private static void initWordsMap(){
         Set<String> wordList = readSensitiveWordsFile();
         addSensitiveWordsToHashMap(wordList);
     }
@@ -99,6 +97,7 @@ public class SensitiveWordFilter implements ApplicationRunner {
      * @return true 包含；false 不包含
      */
     public static Boolean isContainsSensitiveWords(String txt, Integer matchType){
+        initWordsMap();
         if(txt == null || "".equals(txt)){
             return false;
         }
@@ -159,6 +158,7 @@ public class SensitiveWordFilter implements ApplicationRunner {
      * @return
      */
     public static Set<String> getSensitiveWords(String txt,Integer matchType) {
+        initWordsMap();
         txt = txt.replace(" ","").toLowerCase();
         Set<String> sensitiveWords = new HashSet<>();
         for(int i = 0;i < txt.length();i++) {

@@ -62,8 +62,6 @@ public class BookAttachController extends BaseController {
     @Value("${token.appsecret}")
     private String appsecret;
 
-    @Autowired
-    private SensitiveWordFilter sensitiveWordFilter;
 
     @PostMapping("/list")
     @ResponseBody
@@ -324,7 +322,7 @@ public class BookAttachController extends BaseController {
         bookComment.setUserName(userName);
         bookComment.setUserId(Long.valueOf(userId));
         bookComment.setComment(comment);
-        Boolean containsSensitiveWords = sensitiveWordFilter.isContainsSensitiveWords(comment,1);
+        Boolean containsSensitiveWords = SensitiveWordFilter.isContainsSensitiveWords(comment,1);
         int n = 0;
         try {
             if (containsSensitiveWords) {
