@@ -36,14 +36,14 @@
         }
         .user-forum-thumbs {
             width: 100%;
-            height: 7vh;
-            line-height: 7vh;
+            height: 6vh;
+            line-height: 6vh;
         }
         .goodComment {
             width: 340px;
             height: 30px;
             line-height: 30px;
-            background: #efeff1;
+            background: #8989890f;
             text-align: left;
             font-family: Helvetica;
             color: #696c6e;
@@ -59,7 +59,7 @@
         .comment_content {
             margin-top: 8px;
             font-size: 14px;
-            padding-left: 60px;
+            padding-left: 50px;
         }
 
         .imgdiv{
@@ -92,12 +92,18 @@
             -moz-border-radius: 5px;
             -webkit-border-radius: 5px;
             border-radius: 5px;
+            overflow: scroll;
         }
+
+        .Input_Box > textarea::-webkit-scrollbar {
+            display: none;
+        }
+
         .Input_Foot {
             width: 340px;
             height: 35px;
-            border-top: 1px solid #ccc;
-            background-color: #fff;
+            border-top: 1px solid #8989890f;
+            background-color: #8989890f;
             -moz-border-radius: 0 0 5px 5px;
             -webkit-border-radius: 0 0 5px 5px;
             border-radius: 0 0 5px 5px;
@@ -108,16 +114,15 @@
             font: 13px “微软雅黑”, Arial, Helvetica, sans-serif;
             color: #808080;
             padding: 9px 20px 7px 20px;
-            border-left: 1px solid #ccc;
             cursor: pointer;
             -moz-border-radius: 0 0 5px 0;
             -webkit-border-radius: 0 0 5px 0;
-            border-radius: 0 0 5px 0;
+            border-radius: 5px;
             background-color: #e4e9ec;
         }
         .postBtn:hover {
-            color: #333;
-            background-color: #595454;
+            color: #f6f8f6;
+            background-color: #44dc30;
         }
         .postBtn:active {
             padding: 10px 20px 6px 20px;
@@ -142,15 +147,13 @@
             <img class="imgContain" th:src="@{${attach.attachUrl}}">
 
             <div class="user-forum-thumbs">
-                <div style="width: 340px;height: 3vh;margin-top: 2vh">
-                    <span style="float: left" id="countComment" ></span>
-                    <a href="#thumbs-o-up" id="up" onclick="thumbUpClock()" style="height: 3vh;float: right;margin-right: 4vh;line-height: 3vh"><i class="fa fa-thumbs-o-up"></i></a>
-                    <a href="#thumbs-up" id="down" onclick="thumbUpClock()" style="height: 3vh;float: right;margin-right: 4vh;line-height: 3vh"><i class="fa fa-thumbs-up"></i></a>
-                </div>
-                <div style="width: 340px;height: 3vh;margin-right: 2vh">
-                    <span id="num" style="height: 3vh;float: right ;line-height: 3vh;margin-right: 4vh"
-                          th:text="${num}"></span>
-                </div>
+                <span id="countComment" style="float: left;line-height: 6vh"></span>
+                <a href="#thumbs-o-up" id="up" onclick="thumbUpClock()"
+                   style="float: right;margin-right: 4vh;line-height: 6vh"><i class="fa fa-thumbs-o-up"></i><span
+                        id="num" style="padding-left: 5px"></span></a>
+                <a href="#thumbs-up" id="down" onclick="thumbUpClock()"
+                   style="float: right;margin-right: 4vh;line-height: 6vh"><i class="fa fa-thumbs-up"></i><span
+                        id="num2" style="padding-left: 5px"></span></a>
             </div>
 
             <div class="Input_Box" id="input" >
@@ -180,20 +183,23 @@
         var id = [[${attach.id}]];
         var flag = true;
         $(function() {
-        //     if (dd.env.platform=="notInDingTalk") {
-        //         alert("请用钉钉打开！");
-        //         return;
-        //     } else {
+            if (dd.env.platform == "notInDingTalk") {
+                alert("请用钉钉打开！");
+                return;
+            } else {
                 $('#dataDiv').show();
                 var attach = [[${attach}]];
                 if (attach == null || attach.attachUrl == null) {
                     $.modal.msgError("本期刊没有上传内容");
                 }
-                var code = "";
-                var data = {"code":code,"id":id}
+                if (attach == null || attach.enableComment == 0) {
+                    $('#input').hide();
+                    $('#commentMsg').hide();
+                    $('#countComment').hide();
+                }
+                var data = {"code": null, "id": id}
                 init(data)
-        //     }
-
+            }
         })
 
         /**
@@ -237,11 +243,14 @@
                         window.userId = result.data.userId;
                         window.userName = result.data.name;
                         document.getElementById("countComment").innerHTML ="评论总数："+result.data.countComment;
-                        document.getElementById("num").innerHTML = result.data.num;
                         if (flag) {
+                            document.getElementById("num").innerHTML = result.data.num;
+                            document.getElementById("num2").innerHTML = result.data.num + 1;
                             document.getElementById("up").style.display = "block";
                             document.getElementById("down").style.display = "none";
                         } else {
+                            document.getElementById("num2").innerHTML = result.data.num;
+                            document.getElementById("num").innerHTML = result.data.num - 1;
                             document.getElementById("up").style.display = "none";
                             document.getElementById("down").style.display = "block";
                         }
@@ -282,16 +291,16 @@
          */
 
         function thumbUpClock() {
-            var n = document.getElementById("num");
+            // var n = document.getElementById("num");
             // 根据类切换类名
             if (window.flag) {
-                n.innerHTML = parseInt(n.innerHTML) + 1;
+                // n.innerHTML = parseInt(n.innerHTML) + 1;
                 document.getElementById("up").style.display = "none";
                 document.getElementById("down").style.display = "block";
                 window.flag = false;
                 thumbsUp(window.flag)
             } else {
-                n.innerHTML = parseInt(n.innerHTML) - 1;
+                // n.innerHTML = parseInt(n.innerHTML) - 1;
                 document.getElementById("up").style.display = "block";
                 document.getElementById("down").style.display = "none";
                 window.flag = true;
@@ -341,6 +350,7 @@
                             }
                             commentList = result.data
                             drowComment2(commentList)
+                            location.reload()
                         }else {
                             console.log(result.msg)
                         }
@@ -364,8 +374,8 @@
                 s += '<div class="comment">';
                 s += '<div class="imgdiv"><img class="imgcss"  src="/dzk/img/dingHead.png"/></div>';
                 s += '<div class="conmment_details">';
-                s +=  '<span class="comment_name">'+list.userName+ '</span>'+'<span style="float: right">'+list.createTime+'</span>';
-                s += 	'<div class="comment_content" >'+list.comment+'</div>';
+                s += '<span class="comment_name">' + list.userName + '</span>' + '<span style="float: right;font-size: 12px;">' + list.createTime + '</span>';
+                s += '<div class="comment_content" >' + list.comment + '</div>';
                 s += 	'</div><hr/></div>';
                 $(s).appendTo($("#addcontent"));
             }

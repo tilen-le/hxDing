@@ -38,20 +38,20 @@
     <script type="text/javascript" th:src="@{/dzk/modernizr.2.5.3.min.js}"></script>
     <script th:src="@{/js/imagesloaded.pkgd.min.js}"></script>
     <script>
-        // if (dd.env.platform=="notInDingTalk") {
-        //     alert("请用钉钉打开！");
-        // } else {
+        if (dd.env.platform == "notInDingTalk") {
+            alert("请用钉钉打开！");
+        } else {
             var isFHD = $(window).width() > 600 ? true : false;
             var id = [[${id}]];
             debugger
-            (function() {
+            (function () {
                 if (isFHD) {
                     window.location.href = '/dzk/ebook/attach/jump/detail?id=' + id + "&status=1&from=pc";
                 } else {
                     window.location.href = '/dzk/ebook/attach/jump/detail?id=' + id + "&status=1&from=phone";
                 }
             })()
-        // }
+        }
     </script>
 </head>
 <body>
