@@ -183,24 +183,23 @@
         var id = [[${attach.id}]];
         var flag = true;
         $(function() {
-            //     if (dd.env.platform=="notInDingTalk") {
-            //         alert("请用钉钉打开！");
-            //         return;
-            //     } else {
-            $('#dataDiv').show();
-            var attach = [[${attach}]];
-            if (attach == null || attach.attachUrl == null) {
-                $.modal.msgError("本期刊没有上传内容");
+            if (dd.env.platform == "notInDingTalk") {
+                alert("请用钉钉打开！");
+                return;
+            } else {
+                $('#dataDiv').show();
+                var attach = [[${attach}]];
+                if (attach == null || attach.attachUrl == null) {
+                    $.modal.msgError("本期刊没有上传内容");
+                }
+                if (attach == null || attach.enableComment == 0) {
+                    $('#input').hide();
+                    $('#commentMsg').hide();
+                    $('#countComment').hide();
+                }
+                var data = {"code": null, "id": id}
+                init(data)
             }
-            if (attach == null || attach.enableComment == 0) {
-                $('#input').hide();
-                $('#commentMsg').hide();
-                $('#countComment').hide();
-            }
-            var data = {"code": null, "id": id}
-            init(data)
-            //     }
-
         })
 
         /**

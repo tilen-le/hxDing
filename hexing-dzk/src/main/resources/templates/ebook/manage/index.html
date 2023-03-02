@@ -38,18 +38,18 @@
     <script type="text/javascript" th:src="@{/dzk/modernizr.2.5.3.min.js}"></script>
     <script th:src="@{/js/imagesloaded.pkgd.min.js}"></script>
     <script>
-        // if (dd.env.platform=="notInDingTalk") {
-        //     alert("请用钉钉打开！");
-        // } else {
+        if (dd.env.platform == "notInDingTalk") {
+            alert("请用钉钉打开！");
+        } else {
             var isFHD = screen.width > 600 ? true : false;
-            (function() {
+            (function () {
                 if (isFHD) {
                     window.location.href = '/dzk/ebook/manage/dingPc';
                 } else {
                     window.location.href = '/dzk/ebook/manage/dingPhone';
                 }
             })()
-        // }
+        }
     </script>
 </head>
 <body>

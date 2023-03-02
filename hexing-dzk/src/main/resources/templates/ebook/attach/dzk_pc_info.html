@@ -82,16 +82,16 @@
 
 <script type="text/javascript" th:inline="javascript">
     $(function() {
-        // if (dd.env.platform=="notInDingTalk") {
-        //     alert("请用钉钉打开！");
-        //     return;
-        // } else {
+        if (dd.env.platform == "notInDingTalk") {
+            alert("请用钉钉打开！");
+            return;
+        } else {
             $('#dataDiv').show();
-            var attachList=[[${attachList}]];
+            var attachList = [[${attachList}]];
             if (attachList.length == 0) {
                 $.modal.msgError("本刊暂时没有任何期刊");
             }
-        // }
+        }
     })
 
     function readAttach(id) {
