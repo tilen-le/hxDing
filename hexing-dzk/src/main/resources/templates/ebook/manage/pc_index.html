@@ -73,16 +73,16 @@
 
 <script type="text/javascript" th:inline="javascript">
     $(function() {
-        // if (dd.env.platform=="notInDingTalk") {
-        //     alert("请用钉钉打开！");
-        //     return;
-        // } else {
+        if (dd.env.platform == "notInDingTalk") {
+            alert("请用钉钉打开！");
+            return;
+        } else {
             $('#dataDiv').show();
-            var bookList=[[${bookList}]];
+            var bookList = [[${bookList}]];
             if (bookList.length == 0) {
                 $.modal.msgError("无任何电子刊");
             }
-        // }
+        }
     })
 
     function goAttachList(id) {
