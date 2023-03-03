@@ -45,10 +45,6 @@ public class GetUserMsg {
             HashMap<String, String> map = new HashMap<>();
             map.put("userId",userid);
             map.put("name",name);
-//            if ("070003405826144516".equals(userid)) {
-//                return "80007635";
-//            }
-
             return map;
         } catch (Exception e) {
             e.printStackTrace();

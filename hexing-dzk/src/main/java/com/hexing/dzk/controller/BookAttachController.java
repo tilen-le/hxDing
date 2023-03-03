@@ -228,6 +228,7 @@ public class BookAttachController extends BaseController {
             return prefix + "/attach_phone";
         }
     }
+
     @GetMapping("/getCode")
     @ResponseBody
     public AjaxResult getCode(HttpServletRequest request) {

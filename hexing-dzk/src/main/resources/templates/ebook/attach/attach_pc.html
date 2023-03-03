@@ -209,9 +209,12 @@
                     // corpId: "dingdab143b5a957258df2c783f7214b6d69",//测试
                     onSuccess: function(result) {
                         data.code = result.code;
-                        // addAccessRecords(data);
-                        getCode(data)
-                        getAllComment(data.id)
+                        if (data.code == null) {
+                            $.modal.msgError("没有获取到钉钉code")
+                        } else {
+                            getCode(data)
+                            getAllComment(data.id)
+                        }
                     },
                     onFail: function (err) {
                         // $.modal.msgError("请在钉钉中打开该页面");
