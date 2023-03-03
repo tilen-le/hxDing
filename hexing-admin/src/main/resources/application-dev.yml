@@ -58,3 +58,5 @@ spring:
 token:
     appkey: dingdg5xw8bs25xrhc3x
     appsecret: 9kJHco5VvVDQ9bmLojiPOpLNQW_B_3vwFtc4eUIzh0lj8rw1H1cpz_RrabnUf9T_
+file:
+    sensitiveWord: C:\Users\80010641\Desktop\sensitive.txt

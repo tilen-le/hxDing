@@ -2,6 +2,7 @@ package com.hexing.common.utils;
 
 
 import com.hexing.common.exception.base.BaseException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.io.ClassPathResource;
@@ -16,29 +17,35 @@ import java.util.*;
  * @author 80010641
  */
 @Component
-public class SensitiveWordFilter implements ApplicationRunner {
+public class SensitiveWordFilter {
 
-    private static final String filePath = "/dic/sensitive.txt";
-
-    private static Map<String, String> sensitiveWordsMap;
+    private static String filePath;
 
     //最小匹配规则
     private static Integer minMatchType = 1;
 
+    @Value("${file.sensitiveWord}")
+    public void setFilePath(String filePath)
+    {
+        SensitiveWordFilter.filePath = filePath;
+    }
 
-    @Override
-    public void run(ApplicationArguments args) throws Exception {
+    private static Map<String, String> sensitiveWordsMap;
+
+
+    private static void initWordsMap(){
         Set<String> wordList = readSensitiveWordsFile();
         addSensitiveWordsToHashMap(wordList);
     }
 
 
     private static Set<String> readSensitiveWordsFile() {
-        Resource file = new ClassPathResource(filePath);
+//        Resource file = new ClassPathResource(filePath);
+        File file = new File(filePath);
         Set<String> result = new HashSet<>();
         BufferedReader br = null;
         try {
-            br = new BufferedReader(new FileReader(file.getFile()));
+            br = new BufferedReader(new FileReader(file));
             String s = null;
             while ((s = br.readLine()) != null) {
                 result.add(s);
@@ -98,6 +105,7 @@ public class SensitiveWordFilter implements ApplicationRunner {
      * @return true 包含；false 不包含
      */
     public static Boolean isContainsSensitiveWords(String txt, Integer matchType){
+        initWordsMap();
         if(txt == null || "".equals(txt)){
             return false;
         }
@@ -158,6 +166,7 @@ public class SensitiveWordFilter implements ApplicationRunner {
      * @return
      */
     public static Set<String> getSensitiveWords(String txt,Integer matchType) {
+        initWordsMap();
         txt = txt.replace(" ","").toLowerCase();
         Set<String> sensitiveWords = new HashSet<>();
         for(int i = 0;i < txt.length();i++) {
@@ -211,7 +220,7 @@ public class SensitiveWordFilter implements ApplicationRunner {
         Long beginTime = System.currentTimeMillis();
         Set<String> wordList = readSensitiveWordsFile();
         addSensitiveWordsToHashMap(wordList);
-        String txt = " s 是一个sb    ";
+        String txt = "";
         Boolean containsSensitiveWords = isContainsSensitiveWords(txt, 1);
         System.out.println("是否包含: " + containsSensitiveWords);
         Set<String> sensitiveWords = getSensitiveWords(txt, 1);

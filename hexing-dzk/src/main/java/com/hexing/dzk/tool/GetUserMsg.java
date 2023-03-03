@@ -7,12 +7,14 @@ import com.dingtalk.api.request.OapiGettokenRequest;
 import com.dingtalk.api.request.OapiUserGetuserinfoRequest;
 import com.dingtalk.api.response.OapiGettokenResponse;
 import com.dingtalk.api.response.OapiUserGetuserinfoResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
 
 
+@Slf4j
 public class GetUserMsg {
     //userid
     public static HashMap<String,String> getUserid(String key, String secret, String code) {
@@ -30,19 +32,23 @@ public class GetUserMsg {
             request1.setCode(code);
             request1.setHttpMethod("GET");
             OapiUserGetuserinfoResponse response1 = client1.execute(request1, accessToken);
+            log.info("=====GetUserMsg:getUserid:response1=" + response1.toString());
+
             String userid = response1.getUserid();
+            log.info("userid" + userid);
             if (userid.startsWith("S")) {
                 userid = userid.substring(1);
             }
             String body = response1.getBody();
             JSONObject jsonObject = JSONObject.parseObject(body);
             String name = jsonObject.getString("name");
-            HashMap<String,String> map = new HashMap<>();
+            HashMap<String, String> map = new HashMap<>();
             map.put("userId",userid);
             map.put("name",name);
 //            if ("070003405826144516".equals(userid)) {
 //                return "80007635";
 //            }
+
             return map;
         } catch (Exception e) {
             e.printStackTrace();

@@ -17,6 +17,7 @@ import com.hexing.common.utils.file.FileUploadUtils;
 import com.hexing.dzk.domain.*;
 import com.hexing.dzk.service.IBookService;
 import com.hexing.dzk.tool.GetUserMsg;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -41,6 +42,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/ebook/attach")
+@Slf4j
 public class BookAttachController extends BaseController {
 
     private String defaultUrl = "/profile/default/cover/cccc.png";
@@ -62,8 +64,6 @@ public class BookAttachController extends BaseController {
     @Value("${token.appsecret}")
     private String appsecret;
 
-    @Autowired
-    private SensitiveWordFilter sensitiveWordFilter;
 
     @PostMapping("/list")
     @ResponseBody
@@ -230,11 +230,15 @@ public class BookAttachController extends BaseController {
     }
     @GetMapping("/getCode")
     @ResponseBody
-    public AjaxResult getCode(HttpServletRequest request){
+    public AjaxResult getCode(HttpServletRequest request) {
         String id = request.getParameter("id");
         String code = request.getParameter("code");
+        if (StringUtils.isEmpty(id) || StringUtils.isEmpty(code)) {
+            return AjaxResult.error("参数不能为null");
+        }
         //查询期刊点赞数量
         int Num = bookService.countBookPraise(Integer.parseInt(id));
+        log.info("getCode：开始获取用户信息,key={},appsecret={},code={}", key, appsecret, code);
         HashMap<String, String> map = GetUserMsg.getUserid(key, appsecret, code);
         String userId = map.get("userId");
         String name = map.get("name");
@@ -327,7 +331,7 @@ public class BookAttachController extends BaseController {
         bookComment.setUserName(userName);
         bookComment.setUserId(Long.valueOf(userId));
         bookComment.setComment(comment);
-        Boolean containsSensitiveWords = sensitiveWordFilter.isContainsSensitiveWords(comment,1);
+        Boolean containsSensitiveWords = SensitiveWordFilter.isContainsSensitiveWords(comment,1);
         int n = 0;
         try {
             if (containsSensitiveWords) {
