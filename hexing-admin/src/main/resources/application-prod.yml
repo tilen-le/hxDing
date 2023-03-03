@@ -6,9 +6,9 @@ spring:
         druid:
             # 主库数据源
             master:
-                url: jdbc:mysql://localhost:3306/hexing-dzk?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+                url: jdbc:mysql://192.168.108.219:3306/dzk?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
                 username: root
-                password: 123456
+                password: HX.123456
             # 从库数据源
             slave:
                 # 从数据源开关/默认关闭
@@ -58,3 +58,6 @@ spring:
 token:
     appkey: ding0nvkwfdgifmkn8he
     appsecret: dG8UnV4OPjcvkDM_xTQAIbaMHgHWUIUjEfzRU1qWwqUDiJ2iZkKLU88mDfd9QCiZ
+
+file:
+    sensitiveWord: /data/file/sensitive.txt
