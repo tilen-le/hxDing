@@ -2,6 +2,7 @@ package com.hexing.common.utils;
 
 
 import com.hexing.common.exception.base.BaseException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.io.ClassPathResource;
@@ -15,14 +16,21 @@ import java.util.*;
 /**
  * @author 80010641
  */
+@Component
 public class SensitiveWordFilter {
 
-    private static final String filePath = "/data/file/sensitive.txt";
-
-    private static Map<String, String> sensitiveWordsMap;
+    private static String filePath;
 
     //最小匹配规则
     private static Integer minMatchType = 1;
+
+    @Value("${file.sensitiveWord}")
+    public void setFilePath(String filePath)
+    {
+        SensitiveWordFilter.filePath = filePath;
+    }
+
+    private static Map<String, String> sensitiveWordsMap;
 
 
     private static void initWordsMap(){
