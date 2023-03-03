@@ -136,5 +136,5 @@ swagger:
   # 是否开启swagger
   enabled: true
 token:
-#  test: dev
-  test: prod
+  test: dev
+#  test: prod
