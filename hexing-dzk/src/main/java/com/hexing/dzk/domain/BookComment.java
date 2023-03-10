@@ -6,9 +6,9 @@ public class BookComment {
     private Integer id;
 
     /**
-    * 用户id
-    */
-    private Long userId;
+     * 用户id
+     */
+    private String userId;
 
     /**
     * 电子刊id
@@ -48,11 +48,11 @@ public class BookComment {
         this.id = id;
     }
 
-    public Long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

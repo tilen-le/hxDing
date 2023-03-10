@@ -21,10 +21,10 @@ public interface BookPraiseMapper {
 
     Integer countByBookId(@Param("bookId") Integer bookId);
 
-    List<BookPraise> selectByUserIdAndBookId(@Param("userId") Long userId, @Param("bookId") Integer bookId);
+    List<BookPraise> selectByUserIdAndBookId(@Param("userId") String userId, @Param("bookId") Integer bookId);
 
 
-    int deleteByBookIdAndUserId(@Param("userId") Long userId, @Param("bookId") Integer bookId);
+    int deleteByBookIdAndUserId(@Param("userId") String userId, @Param("bookId") Integer bookId);
 
     List<BookPraise> selectByAll(BookPraise bookPraise);
 

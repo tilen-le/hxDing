@@ -56,11 +56,11 @@ public interface IBookService {
 
     int countBookPraise(Integer bookId);
 
-    Boolean praiseMark(Long userId,Integer bookId);
+    Boolean praiseMark(String userId, Integer bookId);
 
     int addBookPraise(BookPraise bookPraise);
 
-    int deleteBookPraise(Long userId,Integer bookId);
+    int deleteBookPraise(String userId, Integer bookId);
 
     int addBookComment(BookComment bookComment);
 

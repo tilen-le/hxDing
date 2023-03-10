@@ -106,9 +106,9 @@ public class BookServiceImpl implements IBookService {
     }
 
     @Override
-    public Boolean praiseMark(Long userId, Integer bookId) {
-        List<BookPraise> list = bookPraiseMapper.selectByUserIdAndBookId(userId,bookId);
-        if (list.size() == 0){
+    public Boolean praiseMark(String userId, Integer bookId) {
+        List<BookPraise> list = bookPraiseMapper.selectByUserIdAndBookId(userId, bookId);
+        if (list.size() == 0) {
             return true;
         }
         return false;
@@ -120,8 +120,8 @@ public class BookServiceImpl implements IBookService {
     }
 
     @Override
-    public int deleteBookPraise(Long userId, Integer bookId) {
-        return bookPraiseMapper.deleteByBookIdAndUserId(userId,bookId);
+    public int deleteBookPraise(String userId, Integer bookId) {
+        return bookPraiseMapper.deleteByBookIdAndUserId(userId, bookId);
     }
 
     @Override

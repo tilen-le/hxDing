@@ -244,7 +244,7 @@ public class BookAttachController extends BaseController {
         String userId = map.get("userId");
         String name = map.get("name");
         //用户是否为当前期刊点赞标识
-        Boolean praiseMark = bookService.praiseMark(Long.parseLong(userId), Integer.parseInt(id));
+        Boolean praiseMark = bookService.praiseMark(userId, Integer.parseInt(id));
         Integer countComment = bookService.countBookComment(Integer.parseInt(id));
         //返回数据
         Map<String, Object> maplist = new HashMap<>();
@@ -263,11 +263,11 @@ public class BookAttachController extends BaseController {
         String userId = request.getParameter("userId");
         BookPraise bookPraise = new BookPraise();
         bookPraise.setBookId(Integer.valueOf(bookId));
-        bookPraise.setUserId(Long.valueOf(userId));
+        bookPraise.setUserId(userId);
         if (!flag){
             bookService.addBookPraise(bookPraise);
         }else {
-            bookService.deleteBookPraise(Long.valueOf(userId),Integer.valueOf(bookId));
+            bookService.deleteBookPraise(userId, Integer.valueOf(bookId));
         }
         return AjaxResult.success("成功"+flag);
     }
@@ -330,7 +330,7 @@ public class BookAttachController extends BaseController {
         BookComment bookComment = new BookComment();
         bookComment.setBookId(Integer.valueOf(bookId));
         bookComment.setUserName(userName);
-        bookComment.setUserId(Long.valueOf(userId));
+        bookComment.setUserId(userId);
         bookComment.setComment(comment);
         Boolean containsSensitiveWords = SensitiveWordFilter.isContainsSensitiveWords(comment,1);
         int n = 0;
