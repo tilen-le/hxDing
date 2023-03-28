@@ -229,15 +229,15 @@
 
         /* 启用 */
         function enable(id) {
-            $.modal.confirm("确认要停用评论功能吗？", function () {
-                $.operate.post(prefix + "/changeStatus", {"id": id, "status": 1});
-            })
+            $.modal.confirm("确认要启用该期刊吗？", function () {
+				$.operate.post(prefix + "/changeStatus", {"id": id, "status": 1});
+			})
         }
 
         function disableComment(id) {
-            $.modal.confirm("确认要启用该期刊吗？", function () {
-                $.operate.post(prefix + "/changeEnableComment", {"id": id, "enableComment": 0});
-            })
+			$.modal.confirm("确认要停用评论功能吗？", function () {
+				$.operate.post(prefix + "/changeEnableComment", {"id": id, "enableComment": 0});
+			})
         }
 
         /* 启用 */
